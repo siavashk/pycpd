@@ -26,7 +26,7 @@ class RigidRegistration(object):
 
         while self.iteration < self.maxIterations and self.err > self.tolerance:
             self.iterate()
-            callback(self.X, self.Y)
+            callback(X=self.X, Y=self.Y)
 
         return self.Y, self.s, self.R, self.t
 
