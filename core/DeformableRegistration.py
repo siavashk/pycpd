@@ -109,5 +109,7 @@ class DeformableRegistration(object):
         XX = np.tile(XX, (self.M, 1, 1))
         YY = np.tile(YY, (1, self.M, 1))
         diff = XX-YY
-        diff = np.sum(np.multiply(diff, diff), self.D)
+        diff = np.multiply(diff, diff)
+        diff = np.sum(diff, 2)
+        print diff.shape
         self.G = np.exp(-diff / (2 * self.beta))
