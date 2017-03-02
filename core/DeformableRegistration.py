@@ -111,5 +111,4 @@ class DeformableRegistration(object):
         diff = XX-YY
         diff = np.multiply(diff, diff)
         diff = np.sum(diff, 2)
-        print diff.shape
         self.G = np.exp(-diff / (2 * self.beta))
