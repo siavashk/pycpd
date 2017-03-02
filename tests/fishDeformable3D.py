@@ -21,8 +21,6 @@ def main():
     Y = np.zeros((fish['Y'].shape[0], fish['Y'].shape[1] + 1))
     Y[:,:-1] = fish['Y']
 
-    print X.shape, Y.shape
-
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     callback = partial(visualize, ax=ax)
