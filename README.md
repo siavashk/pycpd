@@ -18,5 +18,5 @@ This repository only needs the packages listed in requirments.txt. I believe you
 
 ## Usage
 
-Each registration method is contained within a single class inside the core subfolder. To try out the registration, you can simply call `python tests/fish{Transform}.py`, where Transform is either Rigid, Affine or Deformable.
+Each registration method is contained within a single class inside the core subfolder. To try out the registration, you can simply call `python tests/fish{Transform}{Dimension}.py`, where Transform is either Rigid, Affine or Deformable and Dimension is either 2D or 3D.
 
