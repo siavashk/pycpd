@@ -2,7 +2,7 @@ from functools import partial
 from scipy.io import loadmat
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-from core import AffineRegistration
+from pycpd import AffineRegistration
 import numpy as np
 import time
 

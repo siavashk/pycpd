@@ -24,10 +24,10 @@ This repository only needs the packages listed in requirments.txt. I believe you
 
 `pip install -r requirements.txt`
 
-Append `pycpd/core` to your `PYTHONPATH`:
+Append `pycpd/pycpd` to your `PYTHONPATH`:
 
-`export PYTHONPATH=$PYTHONPATH:$HOME/pycpd/core`
+`export PYTHONPATH=$PYTHONPATH:$HOME/pycpd/pycpd`
 
 ## Usage
 
-Each registration method is contained within a single class inside the core subfolder. To try out the registration, you can simply call `python tests/fish{Transform}{Dimension}.py`, where Transform is either Rigid, Affine or Deformable and Dimension is either 2D or 3D.
+Each registration method is contained within a single class inside the pycpd subfolder. To try out the registration, you can simply call `python tests/fish{Transform}{Dimension}.py`, where Transform is either Rigid, Affine or Deformable and Dimension is either 2D or 3D.

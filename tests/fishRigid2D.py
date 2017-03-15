@@ -1,7 +1,7 @@
 from functools import partial
 from scipy.io import loadmat
 import matplotlib.pyplot as plt
-from core import RigidRegistration
+from pycpd import RigidRegistration
 import numpy as np
 import time
 

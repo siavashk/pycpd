@@ -1,7 +1,7 @@
 from functools import partial
 from scipy.io import loadmat
 import matplotlib.pyplot as plt
-from core import DeformableRegistration
+from pycpd import DeformableRegistration
 import numpy as np
 import time
 
