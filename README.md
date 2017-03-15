@@ -20,13 +20,15 @@ Clone the repository to a location in your home directory. For example:
 
 `git clone https://github.com/siavashk/pycpd.git $HOME/pycpd`.
 
-This repository only needs the packages listed in requirments.txt. I believe you can install them by calling:
+Install the package:
+
+`pip install .`
+
+For running sample registration examples under `/tests`, you will need two additional packages.
+
+Scipy (for loading `.mat` files) and matplotlib (for visualizing the reigstration). These can be downloaded by running:
 
 `pip install -r requirements.txt`
-
-Append `pycpd/pycpd` to your `PYTHONPATH`:
-
-`export PYTHONPATH=$PYTHONPATH:$HOME/pycpd/pycpd`
 
 ## Usage
 
