@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 
 class AffineRegistration(object):
     def __init__(self, X, Y, B=None, t=None, sigma2=None, maxIterations=100, tolerance=0.001, w=0):

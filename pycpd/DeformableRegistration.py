@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 
 class DeformableRegistration(object):
     def __init__(self, X, Y, alpha=None, beta=None, sigma2=None, maxIterations=100, tolerance=0.001, w=0):
