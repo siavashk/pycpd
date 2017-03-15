@@ -12,7 +12,7 @@ The registration methods work for 2D and 3D point clouds.
 
 ## Pip Install
 
-Coming soon.
+`pip install pycpd`
 
 ## Installation From Source
 
