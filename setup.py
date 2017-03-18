@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='pycpd',
-      version='0.0',
+      version='0.1',
       description='Pure Numpy Implementation of the Coherent Point Drift Algorithm',
       url='https://github.com/siavashk/pycpd',
       author='Siavash Khallaghi',
