@@ -1,7 +1,7 @@
 import numpy as np
 
-class AffineRegistration(object):
-    def __init__(self, X, Y, B=None, t=None, sigma2=None, maxIterations=100, tolerance=0.001, w=0):
+class rigid_registration(object):
+    def __init__(self, X, Y, R=None, t=None, s=None, sigma2=None, maxIterations=100, tolerance=0.001, w=0):
         if X.shape[1] != Y.shape[1]:
             raise 'Both point clouds must have the same number of dimensions!'
 
@@ -9,8 +9,9 @@ class AffineRegistration(object):
         self.Y             = Y
         (self.N, self.D)   = self.X.shape
         (self.M, _)        = self.Y.shape
-        self.B             = np.eye(self.D) if B is None else B
+        self.R             = np.eye(self.D) if R is None else R
         self.t             = np.atleast_2d(np.zeros((1, self.D))) if t is None else t
+        self.s             = 1 if s is None else s
         self.sigma2        = sigma2
         self.iteration     = 0
         self.maxIterations = maxIterations
@@ -24,9 +25,10 @@ class AffineRegistration(object):
 
         while self.iteration < self.maxIterations and self.err > self.tolerance:
             self.iterate()
-            callback(X=self.X, Y=self.Y)
+            if callback:
+                callback(iteration=self.iteration, error=self.err, X=self.X, Y=self.Y)
 
-        return self.Y, self.B, self.t
+        return self.Y, self.s, self.R, self.t
 
     def iterate(self):
         self.EStep()
@@ -48,36 +50,40 @@ class AffineRegistration(object):
         self.A = np.dot(np.transpose(self.XX), np.transpose(self.P))
         self.A = np.dot(self.A, YY)
 
-        self.YPY = np.dot(np.transpose(YY), np.diag(self.P1))
-        self.YPY = np.dot(self.YPY, YY)
+        U, _, V = np.linalg.svd(self.A, full_matrices=True)
+        C = np.ones((self.D, ))
+        C[self.D-1] = np.linalg.det(np.dot(U, V))
 
-        Bt = np.linalg.solve(np.transpose(self.YPY), np.transpose(self.A))
-        self.B = np.transpose(Bt)
-        self.t = np.transpose(muX) - np.dot(self.B, np.transpose(muY))
+        self.R = np.dot(np.dot(U, np.diag(C)), V)
+
+        self.YPY = np.dot(np.transpose(self.P1), np.sum(np.multiply(YY, YY), axis=1))
+
+        self.s = np.trace(np.dot(np.transpose(self.A), self.R)) / self.YPY
+
+        self.t = np.transpose(muX) - self.s * np.dot(self.R, np.transpose(muY))
 
     def transformPointCloud(self, Y=None):
         if not Y:
-            self.Y = np.dot(self.Y, np.transpose(self.B)) + np.tile(np.transpose(self.t), (self.M, 1))
+            self.Y = self.s * np.dot(self.Y, np.transpose(self.R)) + np.tile(np.transpose(self.t), (self.M, 1))
             return
         else:
-            return np.dot(Y, np.transpose(self.B)) + np.tile(np.transpose(self.t), (self.M, 1))
+            return self.s * np.dot(Y, np.transpose(self.R)) + np.tile(np.transpose(self.t), (self.M, 1))
 
     def updateVariance(self):
         qprev = self.q
 
-        trAB     = np.trace(np.dot(self.A, np.transpose(self.B)))
+        trAR     = np.trace(np.dot(self.A, np.transpose(self.R)))
         xPx      = np.dot(np.transpose(self.Pt1), np.sum(np.multiply(self.XX, self.XX), axis =1))
-        trBYPYP  = np.trace(np.dot(np.dot(self.B, self.YPY), np.transpose(self.B)))
-        self.q   = (xPx - 2 * trAB + trBYPYP) / (2 * self.sigma2) + self.D * self.Np/2 * np.log(self.sigma2)
+        self.q   = (xPx - 2 * self.s * trAR + self.s * self.s * self.YPY) / (2 * self.sigma2) + self.D * self.Np/2 * np.log(self.sigma2)
         self.err = np.abs(self.q - qprev)
 
-        self.sigma2 = (xPx - trAB) / (self.Np * self.D)
+        self.sigma2 = (xPx - self.s * trAR) / (self.Np * self.D)
 
         if self.sigma2 <= 0:
             self.sigma2 = self.tolerance / 10
 
     def initialize(self):
-        self.Y = np.dot(self.Y, np.transpose(self.B)) + np.repeat(self.t, self.M, axis=0)
+        self.Y = self.s * np.dot(self.Y, np.transpose(self.R)) + np.repeat(self.t, self.M, axis=0)
         if not self.sigma2:
             XX = np.reshape(self.X, (1, self.N, self.D))
             YY = np.reshape(self.Y, (self.M, 1, self.D))

@@ -1,6 +1,6 @@
 import numpy as np
 
-class DeformableRegistration(object):
+class deformable_registration(object):
     def __init__(self, X, Y, alpha=None, beta=None, sigma2=None, maxIterations=100, tolerance=0.001, w=0):
         if X.shape[1] != Y.shape[1]:
             raise 'Both point clouds must have the same number of dimensions!'
@@ -26,7 +26,8 @@ class DeformableRegistration(object):
 
         while self.iteration < self.maxIterations and self.err > self.tolerance:
             self.iterate()
-            callback(X=self.X, Y=self.Y)
+            if callback:
+                callback(iteration=self.iteration, error=self.err, X=self.X, Y=self.Y)
 
         return self.Y, np.dot(self.G, self.W)
 

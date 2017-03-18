@@ -1,3 +1,3 @@
-from AffineRegistration import AffineRegistration
-from RigidRegistration import RigidRegistration
-from DeformableRegistration import DeformableRegistration
+from affine_registration import affine_registration
+from rigid_registration import rigid_registration
+from deformable_registration import deformable_registration
