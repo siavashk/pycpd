@@ -10,7 +10,7 @@ MIT License.
 Introduction
 *************
 
-This is a pure numpy implmenetation of the coherent point drift `CPD <https://arxiv.org/abs/0905.2635/>` algorithm by Myronenko and Song. It provides three registration methods for point clouds: 1) Scale and rigid registration; 2) Affine registration; and 3) Gaussian regularized non-rigid registration.
+This is a pure numpy implmenetation of the coherent point drift `CPD <https://arxiv.org/abs/0905.2635/>`_ algorithm by Myronenko and Song. It provides three registration methods for point clouds: 1) Scale and rigid registration; 2) Affine registration; and 3) Gaussian regularized non-rigid registration.
 
 The registration methods work for 2D and 3D point clouds.
 
