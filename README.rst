@@ -55,6 +55,6 @@ Each registration method is contained within a single class inside the pycpd sub
 
 .. code-block:: bash
 
- $ python tests/fish{Transform}{Dimension}.py
+ $ python examples/fish{Transform}{Dimension}.py
 
 where Transform is either Rigid, Affine or Deformable and Dimension is either 2D or 3D.
