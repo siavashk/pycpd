@@ -59,7 +59,7 @@ class affine_registration(object):
   def transformPointCloud(self, Y=None):
     if not Y:
       self.Y = np.dot(self.Y, np.transpose(self.B)) + np.tile(np.transpose(self.t), (self.M, 1))
-        return
+      return
     else:
       return np.dot(Y, np.transpose(self.B)) + np.tile(np.transpose(self.t), (self.M, 1))
 

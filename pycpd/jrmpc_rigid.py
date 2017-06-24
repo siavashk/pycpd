@@ -38,8 +38,8 @@ class jrmpc_rigid(object):
     self.X = np.array([np.multiply(np.cos(az), np.cos(el)), np.sin(el), np.multiply(np.sin(az), np.cos(el))])
 
   def print_self(self):
-    print 'Y has %d point clouds.' % (len(self.Y))
-    print 'Each point cloud has M points: ', self.M
-    print 'Dimensionality of all point clouds is: ', self.D
-    print 'Rotation matrices are: ', self.R
-    print 'Translation vectors are: ', self.t
+    print('Y has %d point clouds.' % (len(self.Y)))
+    print('Each point cloud has M points: ', self.M)
+    print('Dimensionality of all point clouds is: ', self.D)
+    print('Rotation matrices are: ', self.R)
+    print('Translation vectors are: ', self.t)

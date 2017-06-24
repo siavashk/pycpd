@@ -11,7 +11,7 @@ def visualize(iteration, error, X, Y, ax):
     ax.scatter(X[:,0],  X[:,1], X[:,2], color='red')
     ax.scatter(Y[:,0],  Y[:,1], Y[:,2], color='blue')
     plt.draw()
-    print "iteration %d, error %.5f" % (iteration, error)
+    print("iteration %d, error %.5f" % (iteration, error))
     plt.pause(0.001)
 
 def main():
