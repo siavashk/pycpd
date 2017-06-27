@@ -5,7 +5,7 @@ def readme():
         return f.read()
 
 setup(name='pycpd',
-      version='0.1',
+      version='0.2',
       description='Pure Numpy Implementation of the Coherent Point Drift Algorithm',
       long_description=readme(),
       url='https://github.com/siavashk/pycpd',
@@ -13,6 +13,7 @@ setup(name='pycpd',
         'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Scientific/Engineering',
       ],
       keywords='image processing, point cloud, registration, mesh, surface',
