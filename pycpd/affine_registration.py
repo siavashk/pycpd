@@ -28,7 +28,7 @@ class affine_registration(object):
       if callback:
         callback(iteration=self.iteration, error=self.err, X=self.X, Y=self.TY)
 
-    return self.TY, self.B, self.t
+    return self.TY, self.B, np.atleast_2d(self.t)
 
   def iterate(self):
     self.eStep()

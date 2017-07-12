@@ -29,7 +29,7 @@ class rigid_registration(object):
       if callback:
         callback(iteration=self.iteration, error=self.err, X=self.X, Y=self.TY)
 
-    return self.TY, self.s, self.R, self.t
+    return self.TY, self.R, np.atleast_2d(self.t), self.s
 
   def iterate(self):
     self.EStep()
