@@ -1,0 +1,11 @@
+Version 0.3
+Fixed the mutability of the moving point cloud.
+
+Version 0.2
+Fixed the compatibility of pycpd with Python 3.x
+
+Version 0.1
+Fixed a bug for registering 3D point clouds. Added 3D examples.
+
+Version 0.0
+Initial release with rigid, affine and deformable registration methods for 2D point clouds.
