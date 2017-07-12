@@ -34,7 +34,7 @@ class rigid_registration(object):
   def iterate(self):
     self.EStep()
     self.MStep()
-    self.iteration = self.iteration + 1
+    self.iteration += 1
 
   def MStep(self):
     self.updateTransform()

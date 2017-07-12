@@ -7,6 +7,7 @@ class affine_registration(object):
 
     self.X             = X
     self.Y             = Y
+    self.TY            = Y
     (self.N, self.D)   = self.X.shape
     (self.M, _)        = self.Y.shape
     self.B             = np.eye(self.D) if B is None else B
@@ -25,9 +26,9 @@ class affine_registration(object):
     while self.iteration < self.maxIterations and self.err > self.tolerance:
       self.iterate()
       if callback:
-        callback(iteration=self.iteration, error=self.err, X=self.X, Y=self.Y)
+        callback(iteration=self.iteration, error=self.err, X=self.X, Y=self.TY)
 
-    return self.Y, self.B, self.t
+    return self.TY, self.B, self.t
 
   def iterate(self):
     self.eStep()
@@ -58,7 +59,7 @@ class affine_registration(object):
 
   def transformPointCloud(self, Y=None):
     if not Y:
-      self.Y = np.dot(self.Y, np.transpose(self.B)) + np.tile(np.transpose(self.t), (self.M, 1))
+      self.TY = np.dot(self.Y, np.transpose(self.B)) + np.tile(np.transpose(self.t), (self.M, 1))
       return
     else:
       return np.dot(Y, np.transpose(self.B)) + np.tile(np.transpose(self.t), (self.M, 1))
@@ -78,10 +79,10 @@ class affine_registration(object):
       self.sigma2 = self.tolerance / 10
 
   def initialize(self):
-    self.Y = np.dot(self.Y, np.transpose(self.B)) + np.repeat(self.t, self.M, axis=0)
+    self.TY = np.dot(self.Y, np.transpose(self.B)) + np.repeat(self.t, self.M, axis=0)
     if not self.sigma2:
       XX = np.reshape(self.X, (1, self.N, self.D))
-      YY = np.reshape(self.Y, (self.M, 1, self.D))
+      YY = np.reshape(self.TY, (self.M, 1, self.D))
       XX = np.tile(XX, (self.M, 1, 1))
       YY = np.tile(YY, (1, self.N, 1))
       diff = XX - YY
@@ -95,7 +96,7 @@ class affine_registration(object):
     P = np.zeros((self.M, self.N))
 
     for i in range(0, self.M):
-      diff     = self.X - np.tile(self.Y[i, :], (self.N, 1))
+      diff     = self.X - np.tile(self.TY[i, :], (self.N, 1))
       diff    = np.multiply(diff, diff)
       P[i, :] = P[i, :] + np.sum(diff, axis=1)
 

@@ -7,6 +7,7 @@ class deformable_registration(object):
 
     self.X             = X
     self.Y             = Y
+    self.TY            = Y
     (self.N, self.D)   = self.X.shape
     (self.M, _)        = self.Y.shape
     self.alpha         = 2 if alpha is None else alpha
@@ -27,14 +28,14 @@ class deformable_registration(object):
     while self.iteration < self.maxIterations and self.err > self.tolerance:
         self.iterate()
         if callback:
-            callback(iteration=self.iteration, error=self.err, X=self.X, Y=self.Y)
+            callback(iteration=self.iteration, error=self.err, X=self.X, Y=self.TY)
 
-    return self.Y, np.dot(self.G, self.W)
+    return self.TY, np.dot(self.G, self.W)
 
   def iterate(self):
     self.EStep()
     self.MStep()
-    self.iteration = self.iteration + 1
+    self.iteration += 1
 
   def MStep(self):
     self.updateTransform()
@@ -48,7 +49,7 @@ class deformable_registration(object):
 
   def transformPointCloud(self, Y=None):
     if not Y:
-      self.Y = self.Y + np.dot(self.G, self.W)
+      self.TY = self.Y + np.dot(self.G, self.W)
       return
     else:
       return Y + np.dot(self.G, self.W)
@@ -85,7 +86,7 @@ class deformable_registration(object):
     P = np.zeros((self.M, self.N))
 
     for i in range(0, self.M):
-      diff     = self.X - np.tile(self.Y[i, :], (self.N, 1))
+      diff     = self.X - np.tile(self.TY[i, :], (self.N, 1))
       diff    = np.multiply(diff, diff)
       P[i, :] = P[i, :] + np.sum(diff, axis=1)
 
