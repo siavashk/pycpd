@@ -48,7 +48,7 @@ class deformable_registration(object):
     self.W = np.linalg.solve(A, B)
 
   def transformPointCloud(self, Y=None):
-    if not Y:
+    if Y is None:
       self.TY = self.Y + np.dot(self.G, self.W)
       return
     else:
