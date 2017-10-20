@@ -1,3 +1,4 @@
 Thanks to:
     Alvin Wan for testing on Python 3.x.
     Talley Lambert for pointing out that the moving point cloud should be immutable during registration.
+    Matthew DiFranco for fixing the check for target point clouds.

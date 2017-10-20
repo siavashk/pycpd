@@ -64,7 +64,7 @@ class rigid_registration(object):
     self.t = np.transpose(muX) - self.s * np.dot(self.R, np.transpose(muY))
 
   def transformPointCloud(self, Y=None):
-    if not Y:
+    if Y is None:
       self.TY = self.s * np.dot(self.Y, np.transpose(self.R)) + np.tile(np.transpose(self.t), (self.M, 1))
       return
     else:
