@@ -68,7 +68,7 @@ class rigid_registration(object):
       self.TY = self.s * np.dot(self.Y, np.transpose(self.R)) + np.tile(np.transpose(self.t), (self.M, 1))
       return
     else:
-      return self.s * np.dot(Y, np.transpose(self.R)) + np.tile(np.transpose(self.t), (self.M, 1))
+      return self.s * np.dot(Y, np.transpose(self.R)) + np.tile(np.transpose(self.t), (Y.shape[0], 1))
 
   def updateVariance(self):
     qprev = self.q
