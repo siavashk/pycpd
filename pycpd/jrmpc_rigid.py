@@ -3,7 +3,7 @@ from functools import reduce
 
 class jrmpc_rigid(object):
   def __init__(self, Y, R=None, t=None, maxIterations=100, gamma=0.1, ):
-    if not Y:
+    if Y is None:
       raise 'Empty list of point clouds!'
 
     dimensions = [cloud.shape[1] for cloud in Y]
