@@ -62,7 +62,7 @@ class affine_registration(object):
       self.TY = np.dot(self.Y, np.transpose(self.B)) + np.tile(np.transpose(self.t), (self.M, 1))
       return
     else:
-      return np.dot(Y, np.transpose(self.B)) + np.tile(np.transpose(self.t), (self.M, 1))
+      return np.dot(Y, np.transpose(self.B)) + np.tile(np.transpose(self.t), (Y.shape[0], 1))
 
   def updateVariance(self):
     qprev = self.q
