@@ -98,6 +98,7 @@ class deformable_registration(object):
     den = np.sum(P, axis=0)
     den = np.tile(den, (self.M, 1))
     den[den==0] = np.finfo(float).eps
+    den += c
 
     self.P   = np.divide(P, den)
     self.Pt1 = np.sum(self.P, axis=0)
