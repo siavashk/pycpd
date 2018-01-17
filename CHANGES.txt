@@ -1,3 +1,6 @@
+Version 0.4
+Fixed the addition of the uniform distribution to the mixture model to account for noise and outliers.
+
 Version 0.3
 Fixed the mutability of the moving point cloud.
 
