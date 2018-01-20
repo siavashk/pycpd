@@ -15,7 +15,7 @@ def visualize(iteration, error, X, Y, ax):
     plt.pause(0.001)
 
 def main():
-    fish = loadmat('.,/data/fish.mat')
+    fish = loadmat('../data/fish.mat')
     X = np.zeros((fish['X'].shape[0], fish['X'].shape[1] + 1))
     X[:,:-1] = fish['X']
 
