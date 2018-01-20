@@ -15,7 +15,7 @@ def visualize(iteration, error, X, Y, ax):
     plt.pause(0.001)
 
 def main():
-    fish = loadmat('./data/bunny.mat')
+    fish = loadmat('../data/bunny.mat')
     X = fish['X']
     Y = X + 1
 
