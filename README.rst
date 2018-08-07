@@ -16,7 +16,7 @@ This is a pure numpy implementation of the coherent point drift `CPD <https://ar
 
 The CPD algorithm is a registration method for aligning two point clouds. In this method, the moving point cloud is modelled as a Gaussian Mixture Model (GMM) and the fixed point cloud are treated as observations from the GMM. The optimal transformation parameters maximze the Maximum A Posteriori (MAP) estimation that the observed point cloud is drawn from the GMM.
 
-The registration methods work for 2D and 3D point clouds. For more information, please refer to my `blog <http://siavashk.github.io/2017/05/14/coherent-point-drift/>`_
+The registration methods work for 2D and 3D point clouds. For more information, please refer to my `blog <http://siavashk.github.io/2017/05/14/coherent-point-drift/>`_.
 
 *************
 Pip Install
