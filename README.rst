@@ -41,13 +41,13 @@ Install the package:
 
   pip install .
 
-For running sample registration examples under `/tests`, you will need two additional packages.
+For running sample registration examples under `examples`, you will need two additional packages.
 
 Scipy (for loading `.mat` files) and matplotlib (for visualizing the reigstration). These can be downloaded by running:
 
 .. code-block:: bash
 
- pip install -r requirements.txt
+ pip install scipy matplotlib
 
 *****
 Usage
