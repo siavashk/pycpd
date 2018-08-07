@@ -1,6 +1,8 @@
 #############
 Python-CPD
 #############
+.. image:: https://travis-ci.com/siavashk/pycpd.svg?branch=master
+    :target: https://travis-ci.com/siavashk/pycpd
 
 Pure Numpy Implementation of the Coherent Point Drift Algorithm.
 
