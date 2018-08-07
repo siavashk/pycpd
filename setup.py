@@ -5,7 +5,7 @@ def readme():
         return f.read()
 
 setup(name='pycpd',
-      version='0.4',
+      version='1.0.1',
       description='Pure Numpy Implementation of the Coherent Point Drift Algorithm',
       long_description=readme(),
       url='https://github.com/siavashk/pycpd',
@@ -21,5 +21,5 @@ setup(name='pycpd',
       author_email='siavashk@ece.ubc.ca',
       license='MIT',
       packages=['pycpd'],
-      install_requires=['numpy'],
+      install_requires=['numpy', 'future'],
       zip_safe=False)

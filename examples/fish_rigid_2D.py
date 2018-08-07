@@ -1,7 +1,7 @@
 from functools import partial
 from scipy.io import loadmat
 import matplotlib.pyplot as plt
-from pycpd import affine_registration
+from pycpd import rigid_registration
 import numpy as np
 import time
 
@@ -14,7 +14,7 @@ def visualize(iteration, error, X, Y, ax):
     plt.pause(0.001)
 
 def main():
-    fish = loadmat('../data/fish.mat')
+    fish = loadmat('data/fish.mat')
     X = fish['X']
     Y = fish['Y']
 
@@ -22,7 +22,7 @@ def main():
     fig.add_axes([0, 0, 1, 1])
     callback = partial(visualize, ax=fig.axes[0])
 
-    reg = affine_registration(X, Y)
+    reg = rigid_registration(**{ 'X': X, 'Y':Y })
     reg.register(callback)
     plt.show()
 

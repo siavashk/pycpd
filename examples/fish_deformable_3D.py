@@ -2,7 +2,7 @@ from functools import partial
 from scipy.io import loadmat
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-from pycpd import affine_registration
+from pycpd import deformable_registration
 import numpy as np
 import time
 
@@ -15,25 +15,18 @@ def visualize(iteration, error, X, Y, ax):
     plt.pause(0.001)
 
 def main():
-    fish = loadmat('../data/fish.mat')
+    fish = loadmat('data/fish.mat')
+    X = np.zeros((fish['X'].shape[0], fish['X'].shape[1] + 1))
+    X[:,:-1] = fish['X']
 
-    X1 = np.zeros((fish['X'].shape[0], fish['X'].shape[1] + 1))
-    X1[:,:-1] = fish['X']
-    X2 = np.ones((fish['X'].shape[0], fish['X'].shape[1] + 1))
-    X2[:,:-1] = fish['X']
-    X = np.vstack((X1, X2))
-
-    Y1 = np.zeros((fish['Y'].shape[0], fish['Y'].shape[1] + 1))
-    Y1[:,:-1] = fish['Y']
-    Y2 = np.ones((fish['Y'].shape[0], fish['Y'].shape[1] + 1))
-    Y2[:,:-1] = fish['Y']
-    Y = np.vstack((Y1, Y2))
+    Y = np.zeros((fish['Y'].shape[0], fish['Y'].shape[1] + 1))
+    Y[:,:-1] = fish['Y']
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     callback = partial(visualize, ax=ax)
 
-    reg = affine_registration(X, Y)
+    reg = deformable_registration(**{ 'X': X, 'Y': Y })
     reg.register(callback)
     plt.show()
 

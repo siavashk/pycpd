@@ -21,23 +21,23 @@ Pip Install
 *************
 .. code-block:: bash
 
-  $ pip install pycpd
+  pip install pycpd
 
 ************************
 Installation From Source
 ************************
 
-Clone the repository to a location in your home directory. For example:
+Clone the repository to a location, referred to as the root folder, in your home directory. For example:
 
 .. code-block:: bash
 
-  $ git clone https://github.com/siavashk/pycpd.git $HOME/pycpd
+  git clone https://github.com/siavashk/pycpd.git $HOME/pycpd
 
 Install the package:
 
 .. code-block:: bash
 
-  $ pip install .
+  pip install .
 
 For running sample registration examples under `/tests`, you will need two additional packages.
 
@@ -45,7 +45,7 @@ Scipy (for loading `.mat` files) and matplotlib (for visualizing the reigstratio
 
 .. code-block:: bash
 
- $ pip install -r requirements.txt
+ pip install -r requirements.txt
 
 *****
 Usage
@@ -55,6 +55,6 @@ Each registration method is contained within a single class inside the pycpd sub
 
 .. code-block:: bash
 
- $ python examples/fish{Transform}{Dimension}.py
+ python examples/fish_{Transform}_{Dimension}.py
 
-where Transform is either Rigid, Affine or Deformable and Dimension is either 2D or 3D.
+where Transform is either rigid, affine or deformable and Dimension is either 2D or 3D. Note that examples are meant to be run from the root folder.

@@ -15,15 +15,18 @@ def visualize(iteration, error, X, Y, ax):
     plt.pause(0.001)
 
 def main():
-    fish = loadmat('../data/bunny.mat')
-    X = fish['X']
-    Y = X + 1
+    fish = loadmat('data/fish.mat')
+    X = np.zeros((fish['X'].shape[0], fish['X'].shape[1] + 1))
+    X[:,:-1] = fish['X']
+
+    Y = np.zeros((fish['Y'].shape[0], fish['Y'].shape[1] + 1))
+    Y[:,:-1] = fish['Y']
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     callback = partial(visualize, ax=ax)
 
-    reg = rigid_registration(X, Y)
+    reg = rigid_registration(**{ 'X': X, 'Y':Y })
     reg.register(callback)
     plt.show()
 

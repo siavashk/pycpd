@@ -1,3 +1,7 @@
+Version 1.0
+All registration algorithms now inherit from expectation_maximization_registration class to remove duplicate code.
+All functions and classes follow Python's PEP8 style.
+
 Version 0.4
 Fixed the addition of the uniform distribution to the mixture model to account for noise and outliers.
 
