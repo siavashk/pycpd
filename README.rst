@@ -29,7 +29,7 @@ Pip Install
 Installation From Source
 ************************
 
-Clone the repository to a location, referred to as the root folder, in your home directory. For example:
+Clone the repository to a location, referred to as the ``root`` folder. For example:
 
 .. code-block:: bash
 
@@ -41,9 +41,9 @@ Install the package:
 
   pip install .
 
-For running sample registration examples under `examples`, you will need two additional packages.
+For running sample registration examples under ``examples``, you will need two additional packages.
 
-Scipy (for loading `.mat` files) and matplotlib (for visualizing the reigstration). These can be downloaded by running:
+Scipy (for loading ``.mat`` files) and matplotlib (for visualizing the registration). These can be downloaded by running:
 
 .. code-block:: bash
 
@@ -53,10 +53,10 @@ Scipy (for loading `.mat` files) and matplotlib (for visualizing the reigstratio
 Usage
 *****
 
-Each registration method is contained within a single class inside the pycpd subfolder. To try out the registration, you can simply call:
+Each registration method is contained within a single class inside the ``pycpd`` subfolder. To try out the registration, you can simply run:
 
 .. code-block:: bash
 
  python examples/fish_{Transform}_{Dimension}.py
 
-where Transform is either rigid, affine or deformable and Dimension is either 2D or 3D. Note that examples are meant to be run from the root folder.
+where ``Transform`` is either ``rigid``, ``affine`` or ``deformable`` and ``Dimension`` is either 2D or 3D. Note that examples are meant to be run from the root folder.
