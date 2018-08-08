@@ -1,3 +1,6 @@
+Version 1.0.3
+Narrowed supported Python versions to what Travis supports for CI.
+
 Version 1.0.2
 Fixed Python 3.x compatibility for inheriting from the base class.
 
