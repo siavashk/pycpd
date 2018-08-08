@@ -35,7 +35,7 @@ class expectation_maximization_registration(object):
         self.P1             = np.zeros((self.M, ))
         self.Np             = 0
 
-    def register(self, callback):
+    def register(self, callback=lambda **kwargs: None):
         self.transform_point_cloud()
         if self.sigma2 is None:
             self.sigma2 = initialize_sigma2(self.X, self.TY)
