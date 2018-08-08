@@ -1,5 +1,4 @@
 from functools import partial
-from scipy.io import loadmat
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from pycpd import rigid_registration
@@ -16,9 +15,8 @@ def visualize(iteration, error, X, Y, ax):
     plt.pause(0.001)
 
 def main():
-    fish = loadmat('data/bunny.mat')
-    X = fish['X']
-    Y = X + 1
+    X = np.loadtxt('data/bunny_target.txt')
+    Y = np.loadtxt('data/bunny_source.txt') #synthetic data, equaivalent to X + 1
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')

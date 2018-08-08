@@ -1,5 +1,4 @@
 from functools import partial
-from scipy.io import loadmat
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from pycpd import deformable_registration
@@ -16,12 +15,19 @@ def visualize(iteration, error, X, Y, ax):
     plt.pause(0.001)
 
 def main():
-    fish = loadmat('data/fish.mat')
-    X = np.zeros((fish['X'].shape[0], fish['X'].shape[1] + 1))
-    X[:,:-1] = fish['X']
+    fish_target = np.loadtxt('data/fish_target.txt')
+    X1 = np.zeros((fish_target.shape[0], fish_target.shape[1] + 1))
+    X1[:,:-1] = fish_target
+    X2 = np.ones((fish_target.shape[0], fish_target.shape[1] + 1))
+    X2[:,:-1] = fish_target
+    X = np.vstack((X1, X2))
 
-    Y = np.zeros((fish['Y'].shape[0], fish['Y'].shape[1] + 1))
-    Y[:,:-1] = fish['Y']
+    fish_source = np.loadtxt('data/fish_source.txt')
+    Y1 = np.zeros((fish_source.shape[0], fish_source.shape[1] + 1))
+    Y1[:,:-1] = fish_source
+    Y2 = np.ones((fish_source.shape[0], fish_source.shape[1] + 1))
+    Y2[:,:-1] = fish_source
+    Y = np.vstack((Y1, Y2))
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')

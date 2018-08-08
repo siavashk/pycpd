@@ -1,5 +1,4 @@
 from functools import partial
-from scipy.io import loadmat
 import matplotlib.pyplot as plt
 from pycpd import rigid_registration
 import numpy as np
@@ -15,9 +14,8 @@ def visualize(iteration, error, X, Y, ax):
     plt.pause(0.001)
 
 def main():
-    fish = loadmat('data/fish.mat')
-    X = fish['X']
-    Y = fish['Y']
+    X = np.loadtxt('data/fish_target.txt')
+    Y = np.loadtxt('data/fish_source.txt')
 
     fig = plt.figure()
     fig.add_axes([0, 0, 1, 1])
