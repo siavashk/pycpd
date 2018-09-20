@@ -68,7 +68,8 @@ class expectation_maximization_registration(object):
         c = c * self.w / (1 - self.w)
         c = c * self.M / self.N
 
-        P = np.exp(-P / (2 * self.sigma2))
+        P_min = np.min(P)
+        P = np.exp(-(P-P_min) / (2 * self.sigma2))
         den = np.sum(P, axis=0)
         den = np.tile(den, (self.M, 1))
         den[den==0] = np.finfo(float).eps
