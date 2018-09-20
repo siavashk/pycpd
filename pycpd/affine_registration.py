@@ -30,7 +30,7 @@ class affine_registration(expectation_maximization_registration):
             self.TY = np.dot(self.Y, np.transpose(self.B)) + np.tile(self.t, (self.M, 1))
             return
         else:
-            return np.dot(Y, np.transpose(self.B)) + np.tile(np.transpose(self.t), (Y.shape[0], 1))
+            return np.dot(Y, np.transpose(self.B)) + np.tile(self.t, (Y.shape[0], 1))
 
     def update_variance(self):
         qprev = self.q
