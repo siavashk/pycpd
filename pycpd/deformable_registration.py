@@ -37,10 +37,10 @@ class deformable_registration(expectation_maximization_registration):
         qprev = self.sigma2
 
         xPx      = np.dot(np.transpose(self.Pt1), np.sum(np.multiply(self.X, self.X), axis=1))
-        yPy      = np.dot(np.transpose(self.P1),  np.sum(np.multiply(self.Y, self.Y), axis=1))
-        trPXY    = np.sum(np.multiply(self.Y, np.dot(self.P, self.X)))
+        yPy      = np.dot(np.transpose(self.P1),  np.sum(np.multiply(self.TY, self.TY), axis=1))
+        trPXY    = np.sum(np.multiply(self.TY, np.dot(self.P, self.X)))
 
-        self.sigma2 = (xPx - trPXY) / (self.Np * self.D)
+        self.sigma2 = (xPx - 2 * trPXY + yPy) / (self.Np * self.D)
 
         if self.sigma2 <= 0:
             self.sigma2 = self.tolerance / 10
