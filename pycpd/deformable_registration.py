@@ -2,7 +2,7 @@ from builtins import super
 import numpy as np
 from .expectation_maximization_registration import expectation_maximization_registration
 
-def make_kernel(Y, beta):
+def gaussian_kernel(Y, beta):
     (M, D) = Y.shape
     XX = np.reshape(Y, (1, M, D))
     YY = np.reshape(Y, (M, 1, D))
@@ -19,7 +19,7 @@ class deformable_registration(expectation_maximization_registration):
         self.alpha         = 2 if alpha is None else alpha
         self.beta          = 2 if alpha is None else beta
         self.W             = np.zeros((self.M, self.D))
-        self.G             = make_kernel(self.Y, self.beta)
+        self.G             = gaussian_kernel(self.Y, self.beta)
 
     def update_transform(self):
         A = np.dot(np.diag(self.P1), self.G) + self.alpha * self.sigma2 * np.eye(self.M)

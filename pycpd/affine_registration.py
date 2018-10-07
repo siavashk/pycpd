@@ -21,23 +21,22 @@ class affine_registration(expectation_maximization_registration):
         self.YPY = np.dot(np.transpose(YY), np.diag(self.P1))
         self.YPY = np.dot(self.YPY, YY)
 
-        Bt = np.linalg.solve(np.transpose(self.YPY), np.transpose(self.A))
-        self.B = np.transpose(Bt)
-        self.t = np.transpose(muX) - np.dot(self.B, np.transpose(muY))
+        self.B = np.linalg.solve(np.transpose(self.YPY), np.transpose(self.A))
+        self.t = np.transpose(muX) - np.dot(np.transpose(self.B), np.transpose(muY))
 
     def transform_point_cloud(self, Y=None):
         if Y is None:
-            self.TY = np.dot(self.Y, np.transpose(self.B)) + np.tile(self.t, (self.M, 1))
+            self.TY = np.dot(self.Y, self.B) + np.tile(self.t, (self.M, 1))
             return
         else:
-            return np.dot(Y, np.transpose(self.B)) + np.tile(self.t, (Y.shape[0], 1))
+            return np.dot(Y, self.B) + np.tile(self.t, (Y.shape[0], 1))
 
     def update_variance(self):
         qprev = self.q
 
-        trAB     = np.trace(np.dot(self.A, np.transpose(self.B)))
+        trAB     = np.trace(np.dot(self.A, self.B))
         xPx      = np.dot(np.transpose(self.Pt1), np.sum(np.multiply(self.XX, self.XX), axis =1))
-        trBYPYP  = np.trace(np.dot(np.dot(self.B, self.YPY), np.transpose(self.B)))
+        trBYPYP  = np.trace(np.dot(np.dot(self.B, self.YPY), self.B))
         self.q   = (xPx - 2 * trAB + trBYPYP) / (2 * self.sigma2) + self.D * self.Np/2 * np.log(self.sigma2)
         self.err = np.abs(self.q - qprev)
 

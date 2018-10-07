@@ -28,22 +28,22 @@ class rigid_registration(expectation_maximization_registration):
         C = np.ones((self.D, ))
         C[self.D-1] = np.linalg.det(np.dot(U, V))
 
-        self.R = np.dot(np.dot(U, np.diag(C)), V)
+        self.R = np.transpose(np.dot(np.dot(U, np.diag(C)), V))
         self.YPY = np.dot(np.transpose(self.P1), np.sum(np.multiply(YY, YY), axis=1))
-        self.s = np.trace(np.dot(np.transpose(self.A), self.R)) / self.YPY
-        self.t = np.transpose(muX) - self.s * np.dot(self.R, np.transpose(muY))
+        self.s = np.trace(np.dot(np.transpose(self.A), np.transpose(self.R))) / self.YPY
+        self.t = np.transpose(muX) - self.s * np.dot(np.transpose(self.R), np.transpose(muY))
 
     def transform_point_cloud(self, Y=None):
         if Y is None:
-            self.TY = self.s * np.dot(self.Y, np.transpose(self.R)) + np.tile(self.t, (self.M, 1))
+            self.TY = self.s * np.dot(self.Y, self.R) + np.tile(self.t, (self.M, 1))
             return
         else:
-            return self.s * np.dot(Y, np.transpose(self.R)) + np.tile(np.transpose(self.t), (Y.shape[0], 1))
+            return self.s * np.dot(Y, self.R) + np.tile(np.transpose(self.t), (Y.shape[0], 1))
 
     def update_variance(self):
         qprev = self.q
 
-        trAR = np.trace(np.dot(self.A, np.transpose(self.R)))
+        trAR = np.trace(np.dot(self.A, self.R))
         xPx = np.dot(np.transpose(self.Pt1), np.sum(np.multiply(self.XX, self.XX), axis =1))
         self.q = (xPx - 2 * self.s * trAR + self.s * self.s * self.YPY) / (2 * self.sigma2) + self.D * self.Np/2 * np.log(self.sigma2)
         self.err = np.abs(self.q - qprev)
