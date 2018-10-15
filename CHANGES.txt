@@ -1,3 +1,10 @@
+Version 1.0.5
+Fixed a leftover extra transpose operation when transforming a point using rigid registration parameters.
+
+Version 1.0.4
+Fixed a bug where updated variance for deformable registration was wrong.
+Removed extra transpose operations on rotation and translation.
+
 Version 1.0.3
 Narrowed supported Python versions to what Travis supports for CI.
 
