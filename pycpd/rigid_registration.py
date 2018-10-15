@@ -38,7 +38,7 @@ class rigid_registration(expectation_maximization_registration):
             self.TY = self.s * np.dot(self.Y, self.R) + np.tile(self.t, (self.M, 1))
             return
         else:
-            return self.s * np.dot(Y, self.R) + np.tile(np.transpose(self.t), (Y.shape[0], 1))
+            return self.s * np.dot(Y, self.R) + np.tile(self.t, (Y.shape[0], 1))
 
     def update_variance(self):
         qprev = self.q
