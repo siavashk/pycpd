@@ -11,7 +11,7 @@ def gaussian_kernel(Y, beta):
     diff = XX-YY
     diff = np.multiply(diff, diff)
     diff = np.sum(diff, 2)
-    return np.exp(-diff / (2 * beta))
+    return np.exp(-diff / (2 * beta**2))
 
 class deformable_registration(expectation_maximization_registration):
     def __init__(self, alpha=2, beta=2, *args, **kwargs):
