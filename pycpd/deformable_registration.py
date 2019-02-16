@@ -17,7 +17,7 @@ class deformable_registration(expectation_maximization_registration):
     def __init__(self, alpha=2, beta=2, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.alpha         = 2 if alpha is None else alpha
-        self.beta          = 2 if alpha is None else beta
+        self.beta          = 2 if beta is None else beta
         self.W             = np.zeros((self.M, self.D))
         self.G             = gaussian_kernel(self.Y, self.beta)
 
