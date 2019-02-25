@@ -35,10 +35,10 @@ class rigid_registration(expectation_maximization_registration):
 
     def transform_point_cloud(self, Y=None):
         if Y is None:
-            self.TY = self.s * np.dot(self.Y, self.R) + np.tile(self.t, (self.M, 1))
+            self.TY = self.s * np.dot(self.Y, self.R) + self.t
             return
         else:
-            return self.s * np.dot(Y, self.R) + np.tile(self.t, (Y.shape[0], 1))
+            return self.s * np.dot(Y, self.R) + self.t
 
     def update_variance(self):
         qprev = self.q
