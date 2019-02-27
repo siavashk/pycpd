@@ -29,6 +29,7 @@ class DeformableRegistration(EMRegistration):
         Width of the Gaussian kernel.
 
     """
+
     def __init__(self, alpha=None, beta=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if alpha is not None and (not isinstance(alpha, numbers.Number) or alpha <= 0):
@@ -45,12 +46,21 @@ class DeformableRegistration(EMRegistration):
         self.G = gaussian_kernel(self.Y, self.beta)
 
     def update_transform(self):
+        """
+        Calculate a new estimate of the deformable transformation.
+        See Eq. 22 of https://arxiv.org/pdf/0905.2635.pdf.
+
+        """
         A = np.dot(np.diag(self.P1), self.G) + \
             self.alpha * self.sigma2 * np.eye(self.M)
         B = np.dot(self.P, self.X) - np.dot(np.diag(self.P1), self.Y)
         self.W = np.linalg.solve(A, B)
 
     def transform_point_cloud(self, Y=None):
+        """
+        Update a point cloud using the new estimate of the deformable transformation.
+
+        """
         if Y is None:
             self.TY = self.Y + np.dot(self.G, self.W)
             return
@@ -58,6 +68,11 @@ class DeformableRegistration(EMRegistration):
             return Y + np.dot(self.G, self.W)
 
     def update_variance(self):
+        """
+        Update the variance of the mixture model using the new estimate of the deformable transformation.
+        See the update rule for sigma2 in Eq. 23 of of https://arxiv.org/pdf/0905.2635.pdf.
+
+        """
         qprev = self.sigma2
 
         xPx = np.dot(np.transpose(self.Pt1), np.sum(
@@ -73,4 +88,8 @@ class DeformableRegistration(EMRegistration):
         self.diff = np.abs(self.sigma2 - qprev)
 
     def get_registration_parameters(self):
+        """
+        Return the current estimate of the deformable transformation parameters.
+
+        """
         return self.G, self.W

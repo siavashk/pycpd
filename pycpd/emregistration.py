@@ -47,18 +47,18 @@ class EMRegistration(object):
 
     tolerance: float (positive)
         Registration will terminate once the difference between
-        consecutive error values falls within this tolerance.
+        consecutive objective function values falls within this tolerance.
 
     w: float (between 0 and 1)
         Contribution of the uniform distribution to account for outliers.
         Valid values span 0 (inclusive) and 1 (exclusive).
 
-    q: float (positive)
-        The error value that represents the misalignment between source
+    q: float
+        The objective function value that represents the misalignment between source
         and target point clouds.
 
     diff: float (positive)
-        The absolute difference between the current and previous error values.
+        The absolute difference between the current and previous objective function values.
 
     P: numpy array
         MxN array of probabilities.
@@ -141,6 +141,18 @@ class EMRegistration(object):
     def get_registration_parameters(self):
         raise NotImplementedError(
             "Registration parameters should be defined in child classes.")
+
+    def update_transform(self):
+        raise NotImplementedError(
+            "Updating transform parameters should be defined in child classes.")
+
+    def transform_point_cloud(self):
+        raise NotImplementedError(
+            "Updating the source point cloud should be defined in child classes.")
+
+    def update_variance(self):
+        raise NotImplementedError(
+            "Updating the Gaussian variance for the mixture model should be defined in child classes.")
 
     def iterate(self):
         self.expectation()
