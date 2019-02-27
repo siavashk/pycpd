@@ -1,19 +1,39 @@
 from builtins import super
 import numpy as np
-from .expectation_maximization_registration import expectation_maximization_registration
+from .emregistration import EMRegistration
+from .utility import is_positive_semi_definite
 
-class affine_registration(expectation_maximization_registration):
+
+class AffineRegistration(EMRegistration):
+    """
+    Affine registration.
+
+    Attributes
+    ----------
+    B: numpy array (semi-positive definite)
+        DxD affine transformation matrix.
+
+    t: numpy array
+        1xD initial translation vector.
+
+    """
     def __init__(self, B=None, t=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        if B is not None and (B.ndim is not 2 or B.shape[0] is not self.D or B.shape[1] is not self.D or not is_positive_semi_definite(B)):
+            raise ValueError('The rotation matrix can only be initialized to {}x{} positive semi definite matrices. Instead got: {}.'.format(self.D, self.D, B))
+
+        if t is not None and (t.ndim is not 2 or t.shape[0] is not 1 or t.shape[1] is not self.D ):
+            raise ValueError('The translation vector can only be initialized to 1x{} positive semi definite matrices. Instead got: {}.'.format(self.D, t))
         self.B = np.eye(self.D) if B is None else B
         self.t = np.atleast_2d(np.zeros((1, self.D))) if t is None else t
 
     def update_transform(self):
         muX = np.divide(np.sum(np.dot(self.P, self.X), axis=0), self.Np)
-        muY = np.divide(np.sum(np.dot(np.transpose(self.P), self.Y), axis=0), self.Np)
+        muY = np.divide(
+            np.sum(np.dot(np.transpose(self.P), self.Y), axis=0), self.Np)
 
         self.XX = self.X - np.tile(muX, (self.N, 1))
-        YY      = self.Y - np.tile(muY, (self.M, 1))
+        YY = self.Y - np.tile(muY, (self.M, 1))
 
         self.A = np.dot(np.transpose(self.XX), np.transpose(self.P))
         self.A = np.dot(self.A, YY)
@@ -22,7 +42,8 @@ class affine_registration(expectation_maximization_registration):
         self.YPY = np.dot(self.YPY, YY)
 
         self.B = np.linalg.solve(np.transpose(self.YPY), np.transpose(self.A))
-        self.t = np.transpose(muX) - np.dot(np.transpose(self.B), np.transpose(muY))
+        self.t = np.transpose(
+            muX) - np.dot(np.transpose(self.B), np.transpose(muY))
 
     def transform_point_cloud(self, Y=None):
         if Y is None:
@@ -34,11 +55,13 @@ class affine_registration(expectation_maximization_registration):
     def update_variance(self):
         qprev = self.q
 
-        trAB     = np.trace(np.dot(self.A, self.B))
-        xPx      = np.dot(np.transpose(self.Pt1), np.sum(np.multiply(self.XX, self.XX), axis =1))
-        trBYPYP  = np.trace(np.dot(np.dot(self.B, self.YPY), self.B))
-        self.q   = (xPx - 2 * trAB + trBYPYP) / (2 * self.sigma2) + self.D * self.Np/2 * np.log(self.sigma2)
-        self.err = np.abs(self.q - qprev)
+        trAB = np.trace(np.dot(self.A, self.B))
+        xPx = np.dot(np.transpose(self.Pt1), np.sum(
+            np.multiply(self.XX, self.XX), axis=1))
+        trBYPYP = np.trace(np.dot(np.dot(self.B, self.YPY), self.B))
+        self.q = (xPx - 2 * trAB + trBYPYP) / (2 * self.sigma2) + \
+            self.D * self.Np/2 * np.log(self.sigma2)
+        self.diff = np.abs(self.q - qprev)
 
         self.sigma2 = (xPx - trAB) / (self.Np * self.D)
 
