@@ -5,3 +5,5 @@
 temp*
 .pytest_cache/*
 testing/__pycache__/*
+venv/
+.idea/

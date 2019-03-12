@@ -11,7 +11,7 @@ def test_2D():
     t = np.array([0.5, 1.0])
 
     Y = np.loadtxt('data/fish_target.txt')
-    X = np.dot(Y, R) + np.tile(t, (np.shape(Y)[0], 1))
+    X = np.dot(Y, R.T) + np.tile(t, (np.shape(Y)[0], 1))
 
     reg = RigidRegistration(**{'X': X, 'Y': Y})
     TY, (s_reg, R_reg, t_reg) = reg.register()
@@ -30,7 +30,7 @@ def test_3D():
     fish_target = np.loadtxt('data/fish_target.txt')
     Y = np.zeros((fish_target.shape[0], fish_target.shape[1] + 1))
     Y[:, :-1] = fish_target
-    X = np.dot(Y, R) + np.tile(t, (np.shape(Y)[0], 1))
+    X = np.dot(Y, R.T) + np.tile(t, (np.shape(Y)[0], 1))
 
     reg = RigidRegistration(**{'X': X, 'Y': Y})
     TY, (s_reg, R_reg, t_reg) = reg.register()

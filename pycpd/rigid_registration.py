@@ -98,10 +98,10 @@ class RigidRegistration(EMRegistration):
 
         """
         if Y is None:
-            self.TY = self.s * np.dot(self.Y, self.R) + self.t
+            self.TY = self.s * np.dot(self.Y, self.R.T) + self.t
             return
         else:
-            return self.s * np.dot(Y, self.R) + self.t
+            return self.s * np.dot(Y, self.R.T) + self.t
 
     def update_variance(self):
         """
