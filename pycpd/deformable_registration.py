@@ -75,6 +75,11 @@ class DeformableRegistration(EMRegistration):
         """
         qprev = self.sigma2
 
+        # The original CPD paper does not explicitly calculate the objective functional.
+        # This functional will include terms from both the negative log-likelihood and
+        # the Gaussian kernel used for regularization.
+        self.q = np.inf
+
         xPx = np.dot(np.transpose(self.Pt1), np.sum(
             np.multiply(self.X, self.X), axis=1))
         yPy = np.dot(np.transpose(self.P1),  np.sum(
@@ -85,6 +90,9 @@ class DeformableRegistration(EMRegistration):
 
         if self.sigma2 <= 0:
             self.sigma2 = self.tolerance / 10
+
+        # Here we use the difference between the current and previous
+        # estimate of the variance as a proxy to test for convergence.
         self.diff = np.abs(self.sigma2 - qprev)
 
     def get_registration_parameters(self):
