@@ -10,6 +10,20 @@ def initialize_sigma2(X, Y):
     err = diff ** 2
     return np.sum(err) / (D * M * N)
 
+def lowrankQS(G, beta, num_eig, eig_fgt=False):
+    # if we do not use FGT we construct affinity matrix G and find the
+    # first eigenvectors/values directly
+
+    if eig_fgt is False:
+        S, Q = np.linalg.eigh(G)
+        eig_indices = list(np.argsort(np.abs(S))[::-1][:num_eig])
+        Q = Q[:, eig_indices]  # eigenvectors
+        S = S[eig_indices]  # eigenvalues.
+
+        return Q, S
+
+    elif eig_fgt is True:
+        raise Exception('Fast Gauss Transform Not Implemented!')
 
 class EMRegistration(object):
     """

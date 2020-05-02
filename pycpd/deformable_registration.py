@@ -15,6 +15,17 @@ def gaussian_kernel(Y, beta):
     diff = np.sum(diff, 2)
     return np.exp(-diff / (2 * beta**2))
 
+def low_rank_eigen(G, num_eig):
+    """
+    Calculate num_eig eigenvectors and eigenvalues of gaussian matrix G.
+    Enables lower dimensional solving 
+    """
+    S, Q = np.linalg.eigh(G)
+    eig_indices = list(np.argsort(np.abs(S))[::-1][:num_eig])
+    Q = Q[:, eig_indices]  # eigenvectors
+    S = S[eig_indices]  # eigenvalues.
+    return Q, S
+
 
 class DeformableRegistration(EMRegistration):
     """
