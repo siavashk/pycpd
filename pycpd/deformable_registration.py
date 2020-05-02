@@ -18,7 +18,7 @@ def gaussian_kernel(Y, beta):
 def low_rank_eigen(G, num_eig):
     """
     Calculate num_eig eigenvectors and eigenvalues of gaussian matrix G.
-    Enables lower dimensional solving 
+    Enables lower dimensional solving.
     """
     S, Q = np.linalg.eigh(G)
     eig_indices = list(np.argsort(np.abs(S))[::-1][:num_eig])
@@ -41,7 +41,7 @@ class DeformableRegistration(EMRegistration):
 
     """
 
-    def __init__(self, alpha=None, beta=None, *args, **kwargs):
+    def __init__(self, alpha=None, beta=None, low_rank=False, num_eig=100, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if alpha is not None and (not isinstance(alpha, numbers.Number) or alpha <= 0):
             raise ValueError(
@@ -55,6 +55,13 @@ class DeformableRegistration(EMRegistration):
         self.beta = 2 if beta is None else beta
         self.W = np.zeros((self.M, self.D))
         self.G = gaussian_kernel(self.Y, self.beta)
+        self.low_rank = low_rank
+        self.num_eig = num_eig
+        if self.low_rank is True:
+            self.Q, self.S = lowrankQS(self.G, self.beta, self.num_eig, eig_fgt=self.eig_fgt)
+            self.inv_S = np.diag(1./self.S)
+            self.S = np.diag(self.S)
+            self.E = 0.
 
     def update_transform(self):
         """
@@ -62,10 +69,24 @@ class DeformableRegistration(EMRegistration):
         See Eq. 22 of https://arxiv.org/pdf/0905.2635.pdf.
 
         """
-        A = np.dot(np.diag(self.P1), self.G) + \
-            self.alpha * self.sigma2 * np.eye(self.M)
-        B = np.dot(self.P, self.X) - np.dot(np.diag(self.P1), self.Y)
-        self.W = np.linalg.solve(A, B)
+        if self.low_rank is False:
+            A = np.dot(np.diag(self.P1), self.G) + \
+                self.alpha * self.sigma2 * np.eye(self.M)
+            B = self.PX - np.dot(np.diag(self.P1), self.Y)
+            self.W = np.linalg.solve(A, B)
+
+        elif self.low_rank is True:
+            # Matlab code equivalent can be found here:
+            # https://github.com/markeroon/matlab-computer-vision-routines/tree/master/third_party/CoherentPointDrift
+            dP = np.diag(self.P1)
+            dPQ = np.matmul(dP, self.Q)
+            F = self.PX - np.matmul(dP, self.Y)
+
+            self.W = 1 / (self.alpha * self.sigma2) * (F - np.matmul(dPQ, (
+                np.linalg.solve((self.alpha * self.sigma2 * self.inv_S + np.matmul(self.Q.T, dPQ)),
+                                (np.matmul(self.Q.T, F))))))
+            QtW = np.matmul(self.Q.T, self.W)
+            self.E = self.E + self.alpha / 2 * np.trace(np.matmul(QtW.T, np.matmul(self.S, QtW)))
 
     def transform_point_cloud(self, Y=None):
         """
@@ -95,7 +116,7 @@ class DeformableRegistration(EMRegistration):
             np.multiply(self.X, self.X), axis=1))
         yPy = np.dot(np.transpose(self.P1),  np.sum(
             np.multiply(self.TY, self.TY), axis=1))
-        trPXY = np.sum(np.multiply(self.TY, np.dot(self.P, self.X)))
+        trPXY = np.sum(np.multiply(self.TY, self.PX))
 
         self.sigma2 = (xPx - 2 * trPXY + yPy) / (self.Np * self.D)
 

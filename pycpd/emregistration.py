@@ -139,6 +139,7 @@ class EMRegistration(object):
         self.P = np.zeros((self.M, self.N))
         self.Pt1 = np.zeros((self.N, ))
         self.P1 = np.zeros((self.M, ))
+        self.PX = np.zeros((self.M, self.D))
         self.Np = 0
 
     def register(self, callback=lambda **kwargs: None):
@@ -190,6 +191,7 @@ class EMRegistration(object):
         self.Pt1 = np.sum(self.P, axis=0)
         self.P1 = np.sum(self.P, axis=1)
         self.Np = np.sum(self.P1)
+        self.PX = np.matmul(self.P, self.X)
 
     def maximization(self):
         self.update_transform()
