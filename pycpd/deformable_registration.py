@@ -95,19 +95,17 @@ class DeformableRegistration(EMRegistration):
         Update a point cloud using the new estimate of the deformable transformation.
 
         """
-        if self.low_rank is False:
-            if Y is None:
+        if Y is not None:
+            G = gaussian_kernel(X=Y, beta=self.beta, Y=self.Y)
+            return Y + np.dot(G, self.W)
+        else:
+            if self.low_rank is False:
                 self.TY = self.Y + np.dot(self.G, self.W)
-                return
-            else:
-                return Y + np.dot(self.G, self.W)
 
-        elif self.low_rank is True:
-            if Y is None:
+            elif self.low_rank is True:
                 self.TY = self.Y + np.matmul(self.Q, np.matmul(self.S, np.matmul(self.Q.T, self.W)))
                 return
-            else:
-                return Y + np.matmul(self.Q, np.matmul(self.S, np.matmul(self.Q.T, self.W)))
+
 
     def update_variance(self):
         """
