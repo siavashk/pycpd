@@ -58,7 +58,7 @@ class DeformableRegistration(EMRegistration):
         self.low_rank = low_rank
         self.num_eig = num_eig
         if self.low_rank is True:
-            self.Q, self.S = lowrankQS(self.G, self.beta, self.num_eig, eig_fgt=self.eig_fgt)
+            self.Q, self.S = low_rank_eigen(self.G, self.num_eig)
             self.inv_S = np.diag(1./self.S)
             self.S = np.diag(self.S)
             self.E = 0.
