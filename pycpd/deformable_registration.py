@@ -7,13 +7,8 @@ from .emregistration import EMRegistration
 def gaussian_kernel(X, beta, Y=None):
     if Y is None:
         Y = X
-    (M, D) = X.shape
-    XX = np.reshape(X, (1, M, D))
-    YY = np.reshape(Y, (M, 1, D))
-    XX = np.tile(XX, (M, 1, 1))
-    YY = np.tile(YY, (1, M, 1))
-    diff = XX-YY
-    diff = np.multiply(diff, diff)
+    diff = X[:, None, :] - Y[None, :, :]
+    diff = np.square(diff)
     diff = np.sum(diff, 2)
     return np.exp(-diff / (2 * beta**2))
 
