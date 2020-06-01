@@ -4,14 +4,11 @@ import numbers
 from .emregistration import EMRegistration
 
 
-def gaussian_kernel(Y, beta):
-    (M, D) = Y.shape
-    XX = np.reshape(Y, (1, M, D))
-    YY = np.reshape(Y, (M, 1, D))
-    XX = np.tile(XX, (M, 1, 1))
-    YY = np.tile(YY, (1, M, 1))
-    diff = XX-YY
-    diff = np.multiply(diff, diff)
+def gaussian_kernel(X, beta, Y=None):
+    if Y is None:
+        Y = X
+    diff = X[:, None, :] - Y[None, :,  :]
+    diff = np.square(diff)
     diff = np.sum(diff, 2)
     return np.exp(-diff / (2 * beta**2))
 
@@ -93,19 +90,17 @@ class DeformableRegistration(EMRegistration):
         Update a point cloud using the new estimate of the deformable transformation.
 
         """
-        if self.low_rank is False:
-            if Y is None:
+        if Y is not None:
+            G = gaussian_kernel(X=Y, beta=self.beta, Y=self.Y)
+            return Y + np.dot(G, self.W)
+        else:
+            if self.low_rank is False:
                 self.TY = self.Y + np.dot(self.G, self.W)
-                return
-            else:
-                return Y + np.dot(self.G, self.W)
 
-        elif self.low_rank is True:
-            if Y is None:
+            elif self.low_rank is True:
                 self.TY = self.Y + np.matmul(self.Q, np.matmul(self.S, np.matmul(self.Q.T, self.W)))
                 return
-            else:
-                return Y + np.matmul(self.Q, np.matmul(self.S, np.matmul(self.Q.T, self.W)))
+
 
     def update_variance(self):
         """

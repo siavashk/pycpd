@@ -51,3 +51,7 @@ def test_3D_low_rank():
     reg = DeformableRegistration(**{'X': X, 'Y': Y, 'low_rank': True})
     TY, _ = reg.register()
     assert_array_almost_equal(TY, X, decimal=0)
+
+    rand_pts = np.random.randint(Y.shape[0], size=int(Y.shape[0]/2))
+    TY2 = reg.transform_point_cloud(Y=Y[rand_pts, :])
+    assert_array_almost_equal(TY2, X[rand_pts, :], decimal=0)
