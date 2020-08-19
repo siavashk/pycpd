@@ -23,7 +23,7 @@ class EMRegistration(object):
     Y: numpy array
         MxD array of source points.
 
-    Y: numpy array
+    TY: numpy array
         MxD array of transformed source points.
 
     sigma2: float (positive)
