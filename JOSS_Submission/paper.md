@@ -100,7 +100,7 @@ for deformable registration that was described by Myronenko and Song
 is used to reduce computation time and has the added benefit of regularizing 
 the non-rigid deformation. 
 
-![Visualization of the 3D rigid registration from the examples included in the library. Each panel represents a different iteration in the registration process.](../images/rigid_bunny/rigid_bunny_3d_registration.tiff)
+![Visualization of the 3D rigid registration from the examples included in the library. Each panel represents a different iteration in the registration process.](rigid_bunny_3d_registration.tiff)
 
 Examples of the PyCPD algorithm are included (Figure 1). Examples are available for
 2D and 3D versions of all registration methods (rigid, affine, deformable). 
