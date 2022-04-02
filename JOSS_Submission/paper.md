@@ -102,10 +102,10 @@ the non-rigid deformation.
 
 ![Visualization of the 3D rigid registration from the examples included in the library. Each panel represents a different iteration in the registration process.](rigid_bunny_3d_registration.tiff)
 
-Examples of the PyCPD algorithm are included (Figure 1). Examples are available for
+Examples of the PyCPD algorithm are included (**Figure 1**). Examples are available for
 2D and 3D versions of all registration methods (rigid, affine, deformable). 
 Examples of how to use the low-rank approximation as well as how to use 
-a sub-set of the points for registraton are also included in the examples. 
+a sub-set of the points for registration are also included in the examples. 
 
 
 # Acknowledgements
