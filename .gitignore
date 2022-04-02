@@ -5,4 +5,11 @@
 temp*
 .pytest_cache/*
 testing/__pycache__/*
+<<<<<<< HEAD
 .DS_Store
+=======
+.DS_Store
+
+/images/rigid_bunny/rigid_bunny_3D_00*.tiff
+/images/rigid_bunny/*.pptx
+>>>>>>> 28d2502c37cee0364cc3a30232b89a0c2546d1a6
