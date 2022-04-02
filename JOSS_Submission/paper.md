@@ -44,14 +44,16 @@ align the moving (or source) point cloud with the fixed point cloud. One
 of the most well known rigid point cloud registration algorithms is 
 the Iterative Closest Point (ICP) algorithm [@121791; @CHEN1992145]. ICP is 
 an iterative algorithm where the following steps are iterated: 
-  i) for every point on the moving point cloud find the closes point on the 
+
+  (1) for every point on the moving point cloud find the closest point on the 
   fixed point cloud
-  ii) use a least squares approach to find the optimal transformation matrix 
+  (2) use a least squares approach to find the optimal transformation matrix 
   (rotation, tranlsation, scaling, shear) to align the point correspondences
-  found in i)
-  iii) apply the transformation from ii) to the moving point cloud
+  found in (1)
+  (3) apply the transformation from (2) to the moving point cloud
+
 These steps are repeated until the root mean squared point-to-point distances
-from i) converges. 
+from (1) converges. 
 
 The coherent point drift (CPD) algorithm was created by Myronenko and Song 
 [@5432191] to overcome many of the limitaitons of ICP and other previous registration
@@ -98,9 +100,9 @@ for deformable registration that was described by Myronenko and Song
 is used to reduce computation time and has the added benefit of regularizing 
 the non-rigid deformation. 
 
-![Visualization of the 3D rigid registration from the examples. Each panel represents a different iteration in the registraiton process. \label{fig:1}](../images/rigid_bunny/rigid_bunny_3d_registration.tiff)
+![Visualization of the 3D rigid registration from the examples included in the library. Each panel represents a different iteration in the registration process.](../images/rigid_bunny/rigid_bunny_3d_registration.tiff)
 
-Examples of the PyCPD algorithm are included \autoref{fig:1}. Examples are available for
+Examples of the PyCPD algorithm are included (Figure 1). Examples are available for
 2D and 3D versions of all registration methods (rigid, affine, deformable). 
 Examples of how to use the low-rank approximation as well as how to use 
 a sub-set of the points for registraton are also included in the examples. 
@@ -109,11 +111,11 @@ a sub-set of the points for registraton are also included in the examples.
 # Acknowledgements
 
 We acknowledge contributions from: 
-- Alvin Wan for testing on Python 3.x.
-- Talley Lambert for pointing out that the moving point cloud should be immutable during registration, 
-- Matthew DiFranco for fixing the check for target point clouds.
-- normanius for pointing out that the contribution of uniform distribution was not being added in the E-step.
-- Kai Zhang for finding a bug when transforming a point cloud using rigid registration parameters.
-- sandyhsia for finding a bug when updating the variance during deformable registration.
+  - Alvin Wan for testing on Python 3.x.
+  - Talley Lambert for pointing out that the moving point cloud should be immutable during registration, 
+  - Matthew DiFranco for fixing the check for target point clouds.
+  - normanius for pointing out that the contribution of uniform distribution was not being added in the E-step.
+  - Kai Zhang for finding a bug when transforming a point cloud using rigid registration parameters.
+  - sandyhsia for finding a bug when updating the variance during deformable registration.
 
 # References
