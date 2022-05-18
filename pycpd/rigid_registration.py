@@ -41,11 +41,11 @@ class RigidRegistration(EMRegistration):
             raise ValueError(
                 'Rigid registration only supports 2D or 3D point clouds. Instead got {}.'.format(self.D))
 
-        if R is not None and (R.ndim is not 2 or R.shape[0] is not self.D or R.shape[1] is not self.D or not is_positive_semi_definite(R)):
+        if R is not None and (R.ndim != 2 or R.shape[0] is not self.D or R.shape[1] is not self.D or not is_positive_semi_definite(R)):
             raise ValueError(
                 'The rotation matrix can only be initialized to {}x{} positive semi definite matrices. Instead got: {}.'.format(self.D, self.D, R))
 
-        if t is not None and (t.ndim is not 2 or t.shape[0] is not 1 or t.shape[1] is not self.D):
+        if t is not None and (t.ndim != 2 or t.shape[0] != 1 or t.shape[1] is not self.D):
             raise ValueError(
                 'The translation vector can only be initialized to 1x{} positive semi definite matrices. Instead got: {}.'.format(self.D, t))
 
