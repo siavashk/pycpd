@@ -106,7 +106,7 @@ class ConstrainedDeformableRegistration(EMRegistration):
             # https://github.com/markeroon/matlab-computer-vision-routines/tree/master/third_party/CoherentPointDrift
             dP = np.diag(self.P1) + self.sigma2*(1/self.e_alpha)*np.diag(self.P1_tilde)
             dPQ = np.matmul(dP, self.Q)
-            F = self.PX - np.matmul(dP, self.Y) + self.sigma2*(1/self.e_alpha)*(self.PX_tilde - np.dot(np.diag(self.P1_tilde), self.Y)) 
+            F = self.PX - np.dot(np.diag(self.P1), self.Y) + self.sigma2*(1/self.e_alpha)*(self.PX_tilde - np.dot(np.diag(self.P1_tilde), self.Y)) 
 
             self.W = 1 / (self.alpha * self.sigma2) * (F - np.matmul(dPQ, (
                 np.linalg.solve((self.alpha * self.sigma2 * self.inv_S + np.matmul(self.Q.T, dPQ)),
