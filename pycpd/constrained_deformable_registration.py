@@ -37,13 +37,13 @@ class ConstrainedDeformableRegistration(EMRegistration):
         Width of the Gaussian kernel.
 
     e_alpha: float (positive)
-        Reliability of priors. Between 1e-8 (very reliable) and 1 (very unreliable)
+        Reliability of correspondence priors. Between 1e-8 (very reliable) and 1 (very unreliable)
     
     source_id: numpy.ndarray (int) 
-        Indices for the points to be used as constraints
+        Indices for the points to be used as correspondences in the source array
 
     target_id: numpy.ndarray (int) 
-        Indices for the points to be used as constraints
+        Indices for the points to be used as correspondences in the target array
 
     """
 
