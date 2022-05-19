@@ -77,7 +77,7 @@ class ConstrainedDeformableRegistration(EMRegistration):
         self.P_tilde = np.zeros((self.M, self.N))
         self.P_tilde[self.source_id, self.target_id] = 1
         self.P1_tilde = np.sum(self.P_tilde, axis=1)
-        self.PX_tilde = np.dot(np.diag(self.P_tilde), self.X)
+        self.PX_tilde = np.dot(self.P_tilde, self.X)
         self.W = np.zeros((self.M, self.D))
         self.G = gaussian_kernel(self.Y, self.beta)
         self.low_rank = low_rank
