@@ -156,16 +156,15 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <p>Due to the robustness and the broad array of uses for the CPD
   algorithm the original CPD paper has currently (March 2022) been
   referenced &gt;2000 times. The CPD algorithm is available in Matlab.
-  However, no open-source python version previously existed. In this
-  paper we present a pure
+  However, to the best of our knowledge, no open-source python version
+  previously existed. In this paper we present a pure
   NumPy(<xref alt="Harris et al., 2020" rid="ref-harris2020array" ref-type="bibr">Harris
   et al., 2020</xref>) version of the CPD algorithm to enable general
   use of CPD for the Python community. Furthermore, the full
   implementation in Numpy makes the algorithm accesible for others to
   learn from. To help in learning, a blog post that coincides with this
-  library has previously been
-  <ext-link ext-link-type="uri" xlink:href="http://siavashk.github.io/2017/05/14/coherent-point-drift/">published</ext-link>
-  (<xref alt="Khallaghi, 2017" rid="ref-khallaghi_2017" ref-type="bibr">Khallaghi,
+  library has previously been [published]
+  (http://siavashk.github.io/2017/05/14/coherent-point-drift/)(<xref alt="Khallaghi, 2017" rid="ref-khallaghi_2017" ref-type="bibr">Khallaghi,
   2017</xref>).</p>
 </sec>
 <sec id="summary">
