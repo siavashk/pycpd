@@ -17,7 +17,7 @@ affiliations:
    index: 1
  - name: NeuralSeg Ltd., Canada
    index: 2
- - name: Independent Researcher, Canada          # Siavash - DO YOU WANT TO INCLUDE YOUR CURRENT EMPLOYER? 
+ - name: Independent Researcher, Canada         
    index: 3
 date: March 31 2022
 bibliography: paper.bib
@@ -77,14 +77,14 @@ are iterated until convergence.
 # Statement of need
 Due to the robustness and the broad array of uses for the CPD algorithm 
 the original CPD paper has currently (March 2022) been referenced >2000 
-times. The CPD algorithm is available in Matlab. However, no open-source
-python version previously existed. In this paper we present a pure 
-NumPy[@harris2020array] version of the CPD algorithm to enable general 
-use of CPD for the Python community. Furthermore, the full implementation 
-in Numpy makes the algorithm accesible for others to learn from. To help 
-in learning, a blog post that coincides with this library has previously 
-been [published](http://siavashk.github.io/2017/05/14/coherent-point-drift/)
-[@khallaghi_2017].
+times. The CPD algorithm is available in Matlab. However, to the best of 
+our knowledge, no open-source python version previously existed. In this 
+paper we present a pure NumPy[@harris2020array] version of the CPD 
+algorithm to enable general use of CPD for the Python community. 
+Furthermore, the full implementation in Numpy makes the algorithm accesible 
+for others to learn from. To help in learning, a blog post that coincides 
+with this library has previously been [published]
+(http://siavashk.github.io/2017/05/14/coherent-point-drift/)[@khallaghi_2017].
 
 # Summary
 The PyCPD package implements the CPD algorithm in NumPy. The library itself 
