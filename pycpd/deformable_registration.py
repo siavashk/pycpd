@@ -5,6 +5,29 @@ from .emregistration import EMRegistration
 
 
 def gaussian_kernel(X, beta, Y=None):
+    """
+    Calculate gaussian kernel matrix.
+
+    Attributes
+    ----------
+    X: numpy array
+        NxD array of points for creating gaussian.
+    
+    beta: float
+        Width of the Gaussian kernel.
+    
+    Y: numpy array, optional
+        MxD array of secondary points to calculate
+        kernel with. Used if predicting on points
+        not used to train.
+        
+    Returns
+    -------
+    K: numpy array
+        Gaussian kernel matrix.
+            NxN if Y is None
+            NxM if Y is not None
+    """
     if Y is None:
         Y = X
     diff = X[:, None, :] - Y[None, :,  :]
@@ -16,6 +39,22 @@ def low_rank_eigen(G, num_eig):
     """
     Calculate num_eig eigenvectors and eigenvalues of gaussian matrix G.
     Enables lower dimensional solving.
+
+    Attributes
+    ----------
+    G: numpy array
+        Gaussian kernel matrix.
+    
+    num_eig: int
+        Number of eigenvectors to use in lowrank calculation. 
+    
+    Returns
+    -------
+    Q: numpy array
+        D x num_eig array of eigenvectors.
+    
+    S: numpy array
+        num_eig array of eigenvalues.
     """
     S, Q = np.linalg.eigh(G)
     eig_indices = list(np.argsort(np.abs(S))[::-1][:num_eig])
@@ -35,7 +74,12 @@ class DeformableRegistration(EMRegistration):
 
     beta: float(positive)
         Width of the Gaussian kernel.
-
+    
+    low_rank: bool
+        Whether to use low rank approximation.
+    
+    num_eig: int
+        Number of eigenvectors to use in lowrank calculation.
     """
 
     def __init__(self, alpha=None, beta=None, low_rank=False, num_eig=100, *args, **kwargs):
@@ -89,6 +133,19 @@ class DeformableRegistration(EMRegistration):
         """
         Update a point cloud using the new estimate of the deformable transformation.
 
+        Attributes
+        ----------
+        Y: numpy array, optional
+            Array of points to transform - use to predict on new set of points.
+            Best for predicting on new points not used to run initial registration.
+                If None, self.Y used.
+        
+        Returns
+        -------
+        If Y is None, returns None.
+        Otherwise, returns the transformed Y.
+                
+
         """
         if Y is not None:
             G = gaussian_kernel(X=Y, beta=self.beta, Y=self.Y)
@@ -134,5 +191,13 @@ class DeformableRegistration(EMRegistration):
         """
         Return the current estimate of the deformable transformation parameters.
 
+
+        Returns
+        -------
+        self.G: numpy array
+            Gaussian kernel matrix.
+
+        self.W: numpy array
+            Deformable transformation matrix.
         """
         return self.G, self.W

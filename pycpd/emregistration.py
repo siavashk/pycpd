@@ -5,6 +5,22 @@ from warnings import warn
 
 
 def initialize_sigma2(X, Y):
+    """
+    Initialize the variance (sigma2).
+
+    Attributes
+    ----------
+    X: numpy array
+        NxD array of points for target.
+    
+    Y: numpy array
+        MxD array of points for source.
+    
+    Returns
+    -------
+    sigma2: float
+        Initial variance.
+    """
     (N, D) = X.shape
     (M, _) = Y.shape
     diff = X[None, :, :] - Y[:, None, :]
@@ -12,6 +28,29 @@ def initialize_sigma2(X, Y):
     return np.sum(err) / (D * M * N)
 
 def lowrankQS(G, beta, num_eig, eig_fgt=False):
+    """
+    Calculate eigenvectors and eigenvalues of gaussian matrix G.
+    
+    !!!
+    This function is a placeholder for implementing the fast
+    gauss transform. It is not yet implemented.
+    !!!
+
+    Attributes
+    ----------
+    G: numpy array
+        Gaussian kernel matrix.
+    
+    beta: float
+        Width of the Gaussian kernel.
+    
+    num_eig: int
+        Number of eigenvectors to use in lowrank calculation of G
+    
+    eig_fgt: bool
+        If True, use fast gauss transform method to speed up. 
+    """
+
     # if we do not use FGT we construct affinity matrix G and find the
     # first eigenvectors/values directly
 
@@ -144,6 +183,23 @@ class EMRegistration(object):
         self.Np = 0
 
     def register(self, callback=lambda **kwargs: None):
+        """
+        Perform the EM registration.
+
+        Attributes
+        ----------
+        callback: function
+            A function that will be called after each iteration.
+            Can be used to visualize the registration process.
+        
+        Returns
+        -------
+        self.TY: numpy array
+            MxD array of transformed source points.
+        
+        registration_parameters:
+            Returned params dependent on registration method used. 
+        """
         self.transform_point_cloud()
         while self.iteration < self.max_iterations and self.diff > self.tolerance:
             self.iterate()
@@ -155,27 +211,45 @@ class EMRegistration(object):
         return self.TY, self.get_registration_parameters()
 
     def get_registration_parameters(self):
+        """
+        Placeholder for child classes.
+        """
         raise NotImplementedError(
             "Registration parameters should be defined in child classes.")
 
     def update_transform(self):
+        """
+        Placeholder for child classes.
+        """
         raise NotImplementedError(
             "Updating transform parameters should be defined in child classes.")
 
     def transform_point_cloud(self):
+        """
+        Placeholder for child classes.
+        """
         raise NotImplementedError(
             "Updating the source point cloud should be defined in child classes.")
 
     def update_variance(self):
+        """
+        Placeholder for child classes.
+        """
         raise NotImplementedError(
             "Updating the Gaussian variance for the mixture model should be defined in child classes.")
 
     def iterate(self):
+        """
+        Perform one iteration of the EM algorithm.
+        """
         self.expectation()
         self.maximization()
         self.iteration += 1
 
     def expectation(self):
+        """
+        Compute the expectation step of the EM algorithm.
+        """
         P = np.sum((self.X[None, :, :] - self.TY[:, None, :]) ** 2, axis=2)
 
         c = (2 * np.pi * self.sigma2) ** (self.D / 2)
@@ -195,6 +269,9 @@ class EMRegistration(object):
         self.PX = np.matmul(self.P, self.X)
 
     def maximization(self):
+        """
+        Compute the maximization step of the EM algorithm.
+        """
         self.update_transform()
         self.transform_point_cloud()
         self.update_variance()

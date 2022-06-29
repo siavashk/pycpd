@@ -25,15 +25,16 @@ class RigidRegistration(EMRegistration):
         Utility array used to calculate the rotation matrix.
         Defined in Fig. 2 of https://arxiv.org/pdf/0905.2635.pdf.
 
-    YPY: float
-        Denominator value used to update the scale factor.
-        Defined in Fig. 2 and Eq. 8 of https://arxiv.org/pdf/0905.2635.pdf.
-
-    X_hat: numpy array
-        Centered target point cloud.
-        Defined in Fig. 2 of https://arxiv.org/pdf/0905.2635.pdf.
-
     """
+    # Additional parameters used in this class, but not inputs.
+    # YPY: float
+    #     Denominator value used to update the scale factor.
+    #     Defined in Fig. 2 and Eq. 8 of https://arxiv.org/pdf/0905.2635.pdf.
+
+    # X_hat: numpy array
+    #     Centered target point cloud.
+    #     Defined in Fig. 2 of https://arxiv.org/pdf/0905.2635.pdf.
+
 
     def __init__(self, R=None, t=None, s=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -96,6 +97,18 @@ class RigidRegistration(EMRegistration):
         """
         Update a point cloud using the new estimate of the rigid transformation.
 
+        Attributes
+        ----------
+        Y: numpy array
+            Point cloud to be transformed - use to predict on new set of points.
+            Best for predicting on new points not used to run initial registration.
+                If None, self.Y used.
+        
+        
+        Returns
+        -------
+        If Y is None, returns None.
+        Otherwise, returns the transformed Y.
         """
         if Y is None:
             self.TY = self.s * np.dot(self.Y, self.R) + self.t
@@ -125,5 +138,15 @@ class RigidRegistration(EMRegistration):
         """
         Return the current estimate of the rigid transformation parameters.
 
+        Returns
+        -------
+        self.s: float
+            Current estimate of the scale factor.
+        
+        self.R: numpy array
+            Current estimate of the rotation matrix.
+        
+        self.t: numpy array
+            Current estimate of the translation vector.
         """
         return self.s, self.R, self.t
