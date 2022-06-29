@@ -15,16 +15,15 @@ class AffineRegistration(EMRegistration):
 
     t: numpy array
         1xD initial translation vector.
-
-    YPY: float
-        Denominator value used to update the scale factor.
-        Defined in Fig. 2 and Eq. 8 of https://arxiv.org/pdf/0905.2635.pdf.
-
-    X_hat: numpy array
-        Centered target point cloud.
-        Defined in Fig. 2 of https://arxiv.org/pdf/0905.2635.pdf
-
     """
+    # Additional parameters used in this class, but not inputs.
+    # YPY: float
+    #     Denominator value used to update the scale factor.
+    #     Defined in Fig. 2 and Eq. 8 of https://arxiv.org/pdf/0905.2635.pdf.
+
+    # X_hat: numpy array
+    #     Centered target point cloud.
+    #     Defined in Fig. 2 of https://arxiv.org/pdf/0905.2635.pdf
 
     def __init__(self, B=None, t=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -37,6 +36,10 @@ class AffineRegistration(EMRegistration):
                 'The translation vector can only be initialized to 1x{} positive semi definite matrices. Instead got: {}.'.format(self.D, t))
         self.B = np.eye(self.D) if B is None else B
         self.t = np.atleast_2d(np.zeros((1, self.D))) if t is None else t
+
+        self.YPY = None
+        self.X_hat = None
+        self.A = None
 
     def update_transform(self):
         """
@@ -67,6 +70,18 @@ class AffineRegistration(EMRegistration):
     def transform_point_cloud(self, Y=None):
         """
         Update a point cloud using the new estimate of the affine transformation.
+        
+        Attributes
+        ----------
+        Y: numpy array, optional
+            Array of points to transform - use to predict on new set of points.
+            Best for predicting on new points not used to run initial registration.
+                If None, self.Y used.
+        
+        Returns
+        -------
+        If Y is None, returns None.
+        Otherwise, returns the transformed Y.
 
         """
         if Y is None:
@@ -99,6 +114,14 @@ class AffineRegistration(EMRegistration):
     def get_registration_parameters(self):
         """
         Return the current estimate of the affine transformation parameters.
+
+        Returns
+        -------
+        B: numpy array
+            DxD affine transformation matrix.
+
+        t: numpy array
+            1xD translation vector.
 
         """
         return self.B, self.t
