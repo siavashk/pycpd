@@ -25,4 +25,4 @@ visualize:
 	pip install matplotlib
 
 doc:
-	pdoc --output-dir docs/html --html --force pycpd 
+	pdoc --output-dir docs/ --html --force pycpd 
