@@ -22,9 +22,7 @@ jobs:
       - uses: actions/setup-python@v3
 
       # ADJUST THIS: install all dependencies (including pdoc)
-      - run: |
-        make requirements
-        make dev
+      - run: make requirements dev
       # ADJUST THIS: build your documentation into docs/.
       - run: make doc
       # We use a custom build script for pdoc itself, ideally you just run `pdoc -o docs/ ...` here.
