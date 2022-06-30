@@ -26,3 +26,5 @@ visualize:
 
 doc:
 	pdoc --output-dir docs/ --html --force pycpd 
+	mv docs/pycpd/* docs/
+	rm -rf docs/pycpd
