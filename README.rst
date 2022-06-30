@@ -4,6 +4,8 @@ Python-CPD
 .. image:: https://travis-ci.com/siavashk/pycpd.svg?branch=master
     :target: https://travis-ci.com/siavashk/pycpd
 
+[Documentation](https://siavashk.github.io/pycpd/)
+
 Pure Numpy Implementation of the Coherent Point Drift Algorithm.
 
 MIT License.
