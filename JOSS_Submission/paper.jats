@@ -108,13 +108,26 @@ a Creative Commons Attribution 4.0 International License (CC BY
   &amp; McKay, 1992</xref>;
   <xref alt="Chen &amp; Medioni, 1992" rid="ref-CHEN1992145" ref-type="bibr">Chen
   &amp; Medioni, 1992</xref>). ICP is an iterative algorithm where the
-  following steps are iterated: i) for every point on the moving point
-  cloud find the closes point on the fixed point cloud ii) use a least
-  squares approach to find the optimal transformation matrix (rotation,
-  tranlsation, scaling, shear) to align the point correspondences found
-  in i) iii) apply the transformation from ii) to the moving point cloud
-  These steps are repeated until the root mean squared point-to-point
-  distances from i) converges.</p>
+  following steps are iterated:</p>
+  <list list-type="order">
+    <list-item>
+      <label>(1)</label>
+      <p>for every point on the moving point cloud find the closest
+      point on the fixed point cloud</p>
+    </list-item>
+    <list-item>
+      <label>(2)</label>
+      <p>use a least squares approach to find the optimal transformation
+      matrix (rotation, tranlsation, scaling, shear) to align the point
+      correspondences found in (1)</p>
+    </list-item>
+    <list-item>
+      <label>(3)</label>
+      <p>apply the transformation from (2) to the moving point cloud</p>
+    </list-item>
+  </list>
+  <p>These steps are repeated until the root mean squared point-to-point
+  distances from (1) converges.</p>
   <p>The coherent point drift (CPD) algorithm was created by Myronenko
   and Song
   (<xref alt="Myronenko &amp; Song, 2010" rid="ref-5432191" ref-type="bibr">Myronenko
@@ -143,16 +156,15 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <p>Due to the robustness and the broad array of uses for the CPD
   algorithm the original CPD paper has currently (March 2022) been
   referenced &gt;2000 times. The CPD algorithm is available in Matlab.
-  However, no open-source python version previously existed. In this
-  paper we present a pure
+  However, to the best of our knowledge, no open-source python version
+  previously existed. In this paper we present a pure
   NumPy(<xref alt="Harris et al., 2020" rid="ref-harris2020array" ref-type="bibr">Harris
   et al., 2020</xref>) version of the CPD algorithm to enable general
   use of CPD for the Python community. Furthermore, the full
   implementation in Numpy makes the algorithm accesible for others to
   learn from. To help in learning, a blog post that coincides with this
-  library has previously been
-  <ext-link ext-link-type="uri" xlink:href="http://siavashk.github.io/2017/05/14/coherent-point-drift/">published</ext-link>
-  (<xref alt="Khallaghi, 2017" rid="ref-khallaghi_2017" ref-type="bibr">Khallaghi,
+  library has previously been [published]
+  (http://siavashk.github.io/2017/05/14/coherent-point-drift/)(<xref alt="Khallaghi, 2017" rid="ref-khallaghi_2017" ref-type="bibr">Khallaghi,
   2017</xref>).</p>
 </sec>
 <sec id="summary">
@@ -173,23 +185,21 @@ a Creative Commons Attribution 4.0 International License (CC BY
   added benefit of regularizing the non-rigid deformation.</p>
   <fig>
     <caption><p>Visualization of the 3D rigid registration from the
-    examples. Each panel represents a different iteration in the
-    registraiton process.
-    <styled-content id="figU003A1"></styled-content></p></caption>
-    <graphic mimetype="image" mime-subtype="tiff" xlink:href="../images/rigid_bunny/rigid_bunny_3d_registration.tiff" xlink:title="" />
+    examples included in the library. Each panel represents a different
+    iteration in the registration process.</p></caption>
+    <graphic mimetype="image" mime-subtype="tiff" xlink:href="rigid_bunny_3d_registration.tiff" xlink:title="" />
   </fig>
-  <p>Examples of the PyCPD algorithm are included
-  <xref alt="Figure 1" rid="figU003A1">Figure 1</xref>. Examples are
-  available for 2D and 3D versions of all registration methods (rigid,
-  affine, deformable). Examples of how to use the low-rank approximation
-  as well as how to use a sub-set of the points for registraton are also
-  included in the examples.</p>
+  <p>Examples of the PyCPD algorithm are included (<bold>Figure
+  1</bold>). Examples are available for 2D and 3D versions of all
+  registration methods (rigid, affine, deformable). Examples of how to
+  use the low-rank approximation as well as how to use a sub-set of the
+  points for registration are also included in the examples.</p>
 </sec>
 <sec id="acknowledgements">
   <title>Acknowledgements</title>
   <p>We acknowledge contributions from: - Alvin Wan for testing on
   Python 3.x. - Talley Lambert for pointing out that the moving point
-  cloud should be immutable during registration, - Matthew DiFranco for
+  cloud should be immutable during registration. - Matthew DiFranco for
   fixing the check for target point clouds. - normanius for pointing out
   that the contribution of uniform distribution was not being added in
   the E-step. - Kai Zhang for finding a bug when transforming a point

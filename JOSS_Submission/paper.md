@@ -17,7 +17,7 @@ affiliations:
    index: 1
  - name: NeuralSeg Ltd., Canada
    index: 2
- - name: Independent Researcher, Canada          # Siavash - DO YOU WANT TO INCLUDE YOUR CURRENT EMPLOYER? 
+ - name: Independent Researcher, Canada         
    index: 3
 date: March 31 2022
 bibliography: paper.bib
@@ -77,14 +77,14 @@ are iterated until convergence.
 # Statement of need
 Due to the robustness and the broad array of uses for the CPD algorithm 
 the original CPD paper has currently (March 2022) been referenced >2000 
-times. The CPD algorithm is available in Matlab. However, no open-source
-python version previously existed. In this paper we present a pure 
-NumPy[@harris2020array] version of the CPD algorithm to enable general 
-use of CPD for the Python community. Furthermore, the full implementation 
-in Numpy makes the algorithm accesible for others to learn from. To help 
-in learning, a blog post that coincides with this library has previously 
-been [published](http://siavashk.github.io/2017/05/14/coherent-point-drift/)
-[@khallaghi_2017].
+times. The CPD algorithm is available in Matlab. However, to the best of 
+our knowledge, no open-source python version previously existed. In this 
+paper we present a pure NumPy[@harris2020array] version of the CPD 
+algorithm to enable general use of CPD for the Python community. 
+Furthermore, the full implementation in Numpy makes the algorithm accesible 
+for others to learn from. To help in learning, a blog post that coincides 
+with this library has previously been [published]
+(http://siavashk.github.io/2017/05/14/coherent-point-drift/)[@khallaghi_2017].
 
 # Summary
 The PyCPD package implements the CPD algorithm in NumPy. The library itself 
@@ -100,22 +100,22 @@ for deformable registration that was described by Myronenko and Song
 is used to reduce computation time and has the added benefit of regularizing 
 the non-rigid deformation. 
 
-![Visualization of the 3D rigid registration from the examples included in the library. Each panel represents a different iteration in the registration process.](../images/rigid_bunny/rigid_bunny_3d_registration.tiff)
+![Visualization of the 3D rigid registration from the examples included in the library. Each panel represents a different iteration in the registration process.](rigid_bunny_3d_registration.tiff)
 
-Examples of the PyCPD algorithm are included (Figure 1). Examples are available for
+Examples of the PyCPD algorithm are included (**Figure 1**). Examples are available for
 2D and 3D versions of all registration methods (rigid, affine, deformable). 
 Examples of how to use the low-rank approximation as well as how to use 
-a sub-set of the points for registraton are also included in the examples. 
+a sub-set of the points for registration are also included in the examples. 
 
 
 # Acknowledgements
 
 We acknowledge contributions from: 
-  - Alvin Wan for testing on Python 3.x.
-  - Talley Lambert for pointing out that the moving point cloud should be immutable during registration, 
-  - Matthew DiFranco for fixing the check for target point clouds.
-  - normanius for pointing out that the contribution of uniform distribution was not being added in the E-step.
-  - Kai Zhang for finding a bug when transforming a point cloud using rigid registration parameters.
-  - sandyhsia for finding a bug when updating the variance during deformable registration.
+- Alvin Wan for testing on Python 3.x.
+- Talley Lambert for pointing out that the moving point cloud should be immutable during registration.
+- Matthew DiFranco for fixing the check for target point clouds.
+- normanius for pointing out that the contribution of uniform distribution was not being added in the E-step.
+- Kai Zhang for finding a bug when transforming a point cloud using rigid registration parameters.
+- sandyhsia for finding a bug when updating the variance during deformable registration.
 
 # References
