@@ -70,7 +70,7 @@ topological structure. The CPD algorithm is also an iterative algorithm that
 iterates between an expectation (E) step and a maximization (M) step until 
 convergence is achieved. The E-step estimates the posterior probability 
 distributions of the GMM centroids (moving points) given the data (fixed 
-points) then the M-step updates the transfomration to maximize the posterior
+points) then the M-step updates the transformation to maximize the posterior
 probability that the data belong to the GMM distributions. The E- and M-steps 
 are iterated until convergence.
 
@@ -96,7 +96,7 @@ to be applied to any point cloud. Thus, it is possible to learn the
 transformation on a subset of the points and then apply it to the whole 
 point cloud to reduce computation time. Finally, the low-rank approximation
 for deformable registration that was described by Myronenko and Song 
-[@5432191] was implemented. A low rank approximation of the Gaussian kernal 
+[@5432191] was implemented. A low rank approximation of the Gaussian kernel 
 is used to reduce computation time and has the added benefit of regularizing 
 the non-rigid deformation. 
 
