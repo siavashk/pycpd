@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE article PUBLIC "-//NLM//DTD JATS (Z39.96) Journal Publishing DTD v1.2 20190208//EN"
+                  "JATS-publishing1.dtd">
+<article xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" dtd-version="1.2" article-type="other">
+<front>
+<journal-meta>
+<journal-id></journal-id>
+<journal-title-group>
+<journal-title>Journal of Open Source Software</journal-title>
+<abbrev-journal-title>JOSS</abbrev-journal-title>
+</journal-title-group>
+<issn publication-format="electronic">2475-9066</issn>
+<publisher>
+<publisher-name>Open Journals</publisher-name>
+</publisher>
+</journal-meta>
+<article-meta>
+<article-id pub-id-type="publisher-id">0</article-id>
+<article-id pub-id-type="doi">N/A</article-id>
+<title-group>
+<article-title>PyCPD: Pure NumPy Implementation of the Coherent Point
+Drift Algorithm</article-title>
+</title-group>
+<contrib-group>
+<contrib contrib-type="author">
+<contrib-id contrib-id-type="orcid">0000-0001-6717-8979</contrib-id>
+<name>
+<surname>Gatti</surname>
+<given-names>Anthony A.</given-names>
+</name>
+<xref ref-type="aff" rid="aff-1"/>
+<xref ref-type="aff" rid="aff-2"/>
+</contrib>
+<contrib contrib-type="author">
+<name>
+<surname>Khallaghi</surname>
+<given-names>Siavash</given-names>
+</name>
+<xref ref-type="aff" rid="aff-3"/>
+<xref ref-type="corresp" rid="cor-1"><sup>*</sup></xref>
+</contrib>
+<aff id="aff-1">
+<institution-wrap>
+<institution>Stanford University, USA</institution>
+</institution-wrap>
+</aff>
+<aff id="aff-2">
+<institution-wrap>
+<institution>NeuralSeg Ltd., Canada</institution>
+</institution-wrap>
+</aff>
+<aff id="aff-3">
+<institution-wrap>
+<institution>Independent Researcher, Canada</institution>
+</institution-wrap>
+</aff>
+</contrib-group>
+<author-notes>
+<corresp id="cor-1">* E-mail: <email></email></corresp>
+</author-notes>
+<volume>¿VOL?</volume>
+<issue>¿ISSUE?</issue>
+<fpage>¿PAGE?</fpage>
+<permissions>
+<copyright-statement>Authors of papers retain copyright and release the
+work under a Creative Commons Attribution 4.0 International License (CC
+BY 4.0)</copyright-statement>
+<copyright-year>2022</copyright-year>
+<copyright-holder>The article authors</copyright-holder>
+<license license-type="open-access" xlink:href="https://creativecommons.org/licenses/by/4.0/">
+<license-p>Authors of papers retain copyright and release the work under
+a Creative Commons Attribution 4.0 International License (CC BY
+4.0)</license-p>
+</license>
+</permissions>
+<kwd-group kwd-group-type="author">
+<kwd>Python</kwd>
+<kwd>Point-cloud</kwd>
+<kwd>Registration</kwd>
+<kwd>Expectation-Maximization</kwd>
+</kwd-group>
+</article-meta>
+</front>
+<body>
+<sec id="background">
+  <title>Background</title>
+  <p>Point cloud registration is a common problem in many areas of
+  computer science, particularly computer vision. Point clouds come from
+  many types of data such as LIDAR commonly used for self-driving
+  vehicles, and other sorts of 3D scanners (e.g., structured light) are
+  commonly used to map the surface of physical objects. Point clouds are
+  also used to represent the surface of an anatomical structure
+  extracted from a medical image. Point cloud registration finds a
+  transformaton from one point cloud to another. Point cloud
+  registration has use cases in many fields from self-driving vehicles
+  to medical imaging and virtual reality. Typically, point cloud
+  registraton is classified into rigid (only rotations or translations),
+  affine (rigid + shearing and scaling) and non-rigid also called
+  deformable registration (non-linear deformation).</p>
+  <p>Point cloud registration typically requires 2 point clouds. The
+  first point cloud is the “fixed” or “target” point cloud and the
+  second is the “moving” or “source” point cloud. We try to find the
+  transformation that will best align the moving (or source) point cloud
+  with the fixed point cloud. One of the most well known rigid point
+  cloud registration algorithms is the Iterative Closest Point (ICP)
+  algorithm
+  (<xref alt="Besl &amp; McKay, 1992" rid="ref-121791" ref-type="bibr">Besl
+  &amp; McKay, 1992</xref>;
+  <xref alt="Chen &amp; Medioni, 1992" rid="ref-CHEN1992145" ref-type="bibr">Chen
+  &amp; Medioni, 1992</xref>). ICP is an iterative algorithm where the
+  following steps are iterated:</p>
+  <list list-type="order">
+    <list-item>
+      <label>(1)</label>
+      <p>for every point on the moving point cloud find the closest
+      point on the fixed point cloud</p>
+    </list-item>
+    <list-item>
+      <label>(2)</label>
+      <p>use a least squares approach to find the optimal transformation
+      matrix (rotation, tranlsation, scaling, shear) to align the point
+      correspondences found in (1)</p>
+    </list-item>
+    <list-item>
+      <label>(3)</label>
+      <p>apply the transformation from (2) to the moving point cloud</p>
+    </list-item>
+  </list>
+  <p>These steps are repeated until the root mean squared point-to-point
+  distances from (1) converges.</p>
+  <p>The coherent point drift (CPD) algorithm was created by Myronenko
+  and Song
+  (<xref alt="Myronenko &amp; Song, 2010" rid="ref-5432191" ref-type="bibr">Myronenko
+  &amp; Song, 2010</xref>) to overcome many of the limitaitons of ICP
+  and other previous registration methods. Namely, these other methods
+  didnt necessarily generalize to greater than 3 dimensions and they
+  were prone to errors such as noise, outliers, or missing points. The
+  CPD alogirthm is a probabilistic multidimensional algorithm that is
+  robust and works for both rigid and non-rigid registration. In CPD the
+  moving point cloud is modelled as a Gaussian Mixture Model (GMM) and
+  the fixed point cloud is treated as observations from the GMM. The
+  optimal transformation parameters maximze the Maximum Likelihood /
+  Maximum A Posteriori (MAP) estimation that the observed point cloud is
+  drawn from the GMM. A key point of the CPD algorithm is that it forces
+  the points to move coherently by preserving topological structure. The
+  CPD algorithm is also an iterative algorithm that iterates between an
+  expectation (E) step and a maximization (M) step until convergence is
+  achieved. The E-step estimates the posterior probability distributions
+  of the GMM centroids (moving points) given the data (fixed points)
+  then the M-step updates the transfomration to maximize the posterior
+  probability that the data belong to the GMM distributions. The E- and
+  M-steps are iterated until convergence.</p>
+</sec>
+<sec id="statement-of-need">
+  <title>Statement of need</title>
+  <p>Due to the robustness and the broad array of uses for the CPD
+  algorithm the original CPD paper has currently (March 2022) been
+  referenced &gt;2000 times. The CPD algorithm is available in Matlab.
+  However, to the best of our knowledge, no open-source python version
+  previously existed. In this paper we present a pure
+  NumPy(<xref alt="Harris et al., 2020" rid="ref-harris2020array" ref-type="bibr">Harris
+  et al., 2020</xref>) version of the CPD algorithm to enable general
+  use of CPD for the Python community. Furthermore, the full
+  implementation in Numpy makes the algorithm accesible for others to
+  learn from. To help in learning, a blog post that coincides with this
+  library has previously been [published]
+  (http://siavashk.github.io/2017/05/14/coherent-point-drift/)(<xref alt="Khallaghi, 2017" rid="ref-khallaghi_2017" ref-type="bibr">Khallaghi,
+  2017</xref>).</p>
+</sec>
+<sec id="summary">
+  <title>Summary</title>
+  <p>The PyCPD package implements the CPD algorithm in NumPy. The
+  library itself includes a module to implement the Expectation
+  Maximization (EM) algorithm. Sub-modules inherent the EM functionality
+  and implement rigid, affine, and deformable registration using EM. CPD
+  registration using affine, rigid, and deformable methods all allow for
+  the transformation learned from CPD to be applied to any point cloud.
+  Thus, it is possible to learn the transformation on a subset of the
+  points and then apply it to the whole point cloud to reduce
+  computation time. Finally, the low-rank approximation for deformable
+  registration that was described by Myronenko and Song
+  (<xref alt="Myronenko &amp; Song, 2010" rid="ref-5432191" ref-type="bibr">Myronenko
+  &amp; Song, 2010</xref>) was implemented. A low rank approximation of
+  the Gaussian kernal is used to reduce computation time and has the
+  added benefit of regularizing the non-rigid deformation.</p>
+  <fig>
+    <caption><p>Visualization of the 3D rigid registration from the
+    examples included in the library. Each panel represents a different
+    iteration in the registration process.</p></caption>
+    <graphic mimetype="image" mime-subtype="tiff" xlink:href="rigid_bunny_3d_registration.tiff" xlink:title="" />
+  </fig>
+  <p>Examples of the PyCPD algorithm are included (<bold>Figure
+  1</bold>). Examples are available for 2D and 3D versions of all
+  registration methods (rigid, affine, deformable). Examples of how to
+  use the low-rank approximation as well as how to use a sub-set of the
+  points for registration are also included in the examples.</p>
+</sec>
+<sec id="acknowledgements">
+  <title>Acknowledgements</title>
+  <p>We acknowledge contributions from: - Alvin Wan for testing on
+  Python 3.x. - Talley Lambert for pointing out that the moving point
+  cloud should be immutable during registration. - Matthew DiFranco for
+  fixing the check for target point clouds. - normanius for pointing out
+  that the contribution of uniform distribution was not being added in
+  the E-step. - Kai Zhang for finding a bug when transforming a point
+  cloud using rigid registration parameters. - sandyhsia for finding a
+  bug when updating the variance during deformable registration.</p>
+</sec>
+</body>
+<back>
+<ref-list>
+  <ref-list>
+    <ref id="ref-121791">
+      <element-citation publication-type="article-journal">
+        <person-group person-group-type="author">
+          <name><surname>Besl</surname><given-names>P. J.</given-names></name>
+          <name><surname>McKay</surname><given-names>Neil D.</given-names></name>
+        </person-group>
+        <article-title>A method for registration of 3-d shapes</article-title>
+        <source>IEEE Transactions on Pattern Analysis and Machine Intelligence</source>
+        <year iso-8601-date="1992">1992</year>
+        <volume>14</volume>
+        <issue>2</issue>
+        <pub-id pub-id-type="doi">10.1109/34.121791</pub-id>
+      </element-citation>
+    </ref>
+    <ref id="ref-CHEN1992145">
+      <element-citation publication-type="article-journal">
+        <person-group person-group-type="author">
+          <name><surname>Chen</surname><given-names>Yang</given-names></name>
+          <name><surname>Medioni</surname><given-names>Gérard</given-names></name>
+        </person-group>
+        <article-title>Object modelling by registration of multiple range images</article-title>
+        <source>Image and Vision Computing</source>
+        <year iso-8601-date="1992">1992</year>
+        <volume>10</volume>
+        <issue>3</issue>
+        <issn>0262-8856</issn>
+        <uri>https://www.sciencedirect.com/science/article/pii/026288569290066C</uri>
+        <pub-id pub-id-type="doi">https://doi.org/10.1016/0262-8856(92)90066-C</pub-id>
+      </element-citation>
+    </ref>
+    <ref id="ref-5432191">
+      <element-citation publication-type="article-journal">
+        <person-group person-group-type="author">
+          <name><surname>Myronenko</surname><given-names>Andriy</given-names></name>
+          <name><surname>Song</surname><given-names>Xubo</given-names></name>
+        </person-group>
+        <article-title>Point set registration: Coherent point drift</article-title>
+        <source>IEEE Transactions on Pattern Analysis and Machine Intelligence</source>
+        <year iso-8601-date="2010">2010</year>
+        <volume>32</volume>
+        <issue>12</issue>
+        <pub-id pub-id-type="doi">10.1109/TPAMI.2010.46</pub-id>
+      </element-citation>
+    </ref>
+    <ref id="ref-harris2020array">
+      <element-citation publication-type="article-journal">
+        <person-group person-group-type="author">
+          <name><surname>Harris</surname><given-names>Charles R.</given-names></name>
+          <name><surname>Millman</surname><given-names>K. Jarrod</given-names></name>
+          <name><surname>Walt</surname><given-names>Stéfan J. van der</given-names></name>
+          <name><surname>Gommers</surname><given-names>Ralf</given-names></name>
+          <name><surname>Virtanen</surname><given-names>Pauli</given-names></name>
+          <name><surname>Cournapeau</surname><given-names>David</given-names></name>
+          <name><surname>Wieser</surname><given-names>Eric</given-names></name>
+          <name><surname>Taylor</surname><given-names>Julian</given-names></name>
+          <name><surname>Berg</surname><given-names>Sebastian</given-names></name>
+          <name><surname>Smith</surname><given-names>Nathaniel J.</given-names></name>
+          <name><surname>Kern</surname><given-names>Robert</given-names></name>
+          <name><surname>Picus</surname><given-names>Matti</given-names></name>
+          <name><surname>Hoyer</surname><given-names>Stephan</given-names></name>
+          <name><surname>Kerkwijk</surname><given-names>Marten H. van</given-names></name>
+          <name><surname>Brett</surname><given-names>Matthew</given-names></name>
+          <name><surname>Haldane</surname><given-names>Allan</given-names></name>
+          <name><surname>Río</surname><given-names>Jaime Fernández del</given-names></name>
+          <name><surname>Wiebe</surname><given-names>Mark</given-names></name>
+          <name><surname>Peterson</surname><given-names>Pearu</given-names></name>
+          <name><surname>Gérard-Marchant</surname><given-names>Pierre</given-names></name>
+          <name><surname>Sheppard</surname><given-names>Kevin</given-names></name>
+          <name><surname>Reddy</surname><given-names>Tyler</given-names></name>
+          <name><surname>Weckesser</surname><given-names>Warren</given-names></name>
+          <name><surname>Abbasi</surname><given-names>Hameer</given-names></name>
+          <name><surname>Gohlke</surname><given-names>Christoph</given-names></name>
+          <name><surname>Oliphant</surname><given-names>Travis E.</given-names></name>
+        </person-group>
+        <article-title>Array programming with NumPy</article-title>
+        <source>Nature</source>
+        <publisher-name>Springer Science; Business Media LLC</publisher-name>
+        <year iso-8601-date="2020-09">2020</year><month>09</month>
+        <volume>585</volume>
+        <issue>7825</issue>
+        <uri>https://doi.org/10.1038/s41586-020-2649-2</uri>
+        <pub-id pub-id-type="doi">10.1038/s41586-020-2649-2</pub-id>
+      </element-citation>
+    </ref>
+    <ref id="ref-khallaghi_2017">
+      <element-citation>
+        <person-group person-group-type="author">
+          <name><surname>Khallaghi</surname><given-names>Siavash</given-names></name>
+        </person-group>
+        <article-title>PyCPD: Tutorial on the coherent point drift algorithm</article-title>
+        <year iso-8601-date="2017-05">2017</year><month>05</month>
+        <uri>http://siavashk.github.io/2017/05/14/coherent-point-drift/</uri>
+      </element-citation>
+    </ref>
+  </ref-list>
+</ref-list>
+</back>
+</article>

@@ -1,8 +1,18 @@
 #############
 Python-CPD
 #############
-.. image:: https://travis-ci.com/siavashk/pycpd.svg?branch=master
-    :target: https://travis-ci.com/siavashk/pycpd
+
+.. |master_badge| image:: https://github.com/siavashk/pycpd/actions/workflows/build-test.yml/badge.svg?branch=master
+.. |development_badge| image:: https://github.com/siavashk/pycpd/actions/workflows/build-test.yml/badge.svg?branch=development
+
++-----------------+---------------------+
+| master          | |master_badge|      |
++-----------------+---------------------+
+| development     | |development_badge| |
++-----------------+---------------------+
+
+
+`Documentation <https://siavashk.github.io/pycpd/>`_
 
 Pure Numpy Implementation of the Coherent Point Drift Algorithm.
 
@@ -41,12 +51,25 @@ Install the package:
 
   pip install .
 
+or 
+
+.. code-block:: bash
+
+  make requirements
+  make build
+
 For running sample registration examples under ``examples``, you will need ``matplotlib`` to visualize the registration. This can be downloaded by running:
 
 .. code-block:: bash
 
  pip install matplotlib
 
+or 
+
+.. code-block:: bash
+
+  make visualize
+  
 *****
 Usage
 *****
@@ -55,6 +78,35 @@ Each registration method is contained within a single class inside the ``pycpd``
 
 .. code-block:: bash
 
- python examples/fish_{Transform}_{Dimension}.py
+python examples/fish_{Transform}_{Dimension}.py
 
 where ``Transform`` is either ``rigid``, ``affine`` or ``deformable`` and ``Dimension`` is either ``2D`` or ``3D``. Note that examples are meant to be run from the ``root`` folder.
+
+*******
+Testing
+*******
+
+Tests can be run using pytest:
+
+.. code-block:: bash
+
+ pip install pytest
+ pytest
+
+or 
+
+.. code-block:: bash
+  
+  make dev
+  make test
+
+*************
+Documentation
+*************
+
+The documentation can be built using pydoc3
+
+.. code-block:: bash
+  
+  make dev
+  make doc

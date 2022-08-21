@@ -1,15 +1,69 @@
+from __future__ import division
 import numpy as np
 import numbers
 from warnings import warn
 
 
 def initialize_sigma2(X, Y):
+    """
+    Initialize the variance (sigma2).
+
+    Attributes
+    ----------
+    X: numpy array
+        NxD array of points for target.
+    
+    Y: numpy array
+        MxD array of points for source.
+    
+    Returns
+    -------
+    sigma2: float
+        Initial variance.
+    """
     (N, D) = X.shape
     (M, _) = Y.shape
     diff = X[None, :, :] - Y[:, None, :]
     err = diff ** 2
     return np.sum(err) / (D * M * N)
 
+def lowrankQS(G, beta, num_eig, eig_fgt=False):
+    """
+    Calculate eigenvectors and eigenvalues of gaussian matrix G.
+    
+    !!!
+    This function is a placeholder for implementing the fast
+    gauss transform. It is not yet implemented.
+    !!!
+
+    Attributes
+    ----------
+    G: numpy array
+        Gaussian kernel matrix.
+    
+    beta: float
+        Width of the Gaussian kernel.
+    
+    num_eig: int
+        Number of eigenvectors to use in lowrank calculation of G
+    
+    eig_fgt: bool
+        If True, use fast gauss transform method to speed up. 
+    """
+
+    # if we do not use FGT we construct affinity matrix G and find the
+    # first eigenvectors/values directly
+
+    if eig_fgt is False:
+        S, Q = np.linalg.eigh(G)
+        eig_indices = list(np.argsort(np.abs(S))[::-1][:num_eig])
+        Q = Q[:, eig_indices]  # eigenvectors
+        S = S[eig_indices]  # eigenvalues.
+
+        return Q, S
+
+    elif eig_fgt is True:
+        raise Exception('Fast Gauss Transform Not Implemented!')
 
 class EMRegistration(object):
     """
@@ -23,7 +77,7 @@ class EMRegistration(object):
     Y: numpy array
         MxD array of source points.
 
-    Y: numpy array
+    TY: numpy array
         MxD array of transformed source points.
 
     sigma2: float (positive)
@@ -125,9 +179,27 @@ class EMRegistration(object):
         self.P = np.zeros((self.M, self.N))
         self.Pt1 = np.zeros((self.N, ))
         self.P1 = np.zeros((self.M, ))
+        self.PX = np.zeros((self.M, self.D))
         self.Np = 0
 
     def register(self, callback=lambda **kwargs: None):
+        """
+        Perform the EM registration.
+
+        Attributes
+        ----------
+        callback: function
+            A function that will be called after each iteration.
+            Can be used to visualize the registration process.
+        
+        Returns
+        -------
+        self.TY: numpy array
+            MxD array of transformed source points.
+        
+        registration_parameters:
+            Returned params dependent on registration method used. 
+        """
         self.transform_point_cloud()
         while self.iteration < self.max_iterations and self.diff > self.tolerance:
             self.iterate()
@@ -139,27 +211,45 @@ class EMRegistration(object):
         return self.TY, self.get_registration_parameters()
 
     def get_registration_parameters(self):
+        """
+        Placeholder for child classes.
+        """
         raise NotImplementedError(
             "Registration parameters should be defined in child classes.")
 
     def update_transform(self):
+        """
+        Placeholder for child classes.
+        """
         raise NotImplementedError(
             "Updating transform parameters should be defined in child classes.")
 
     def transform_point_cloud(self):
+        """
+        Placeholder for child classes.
+        """
         raise NotImplementedError(
             "Updating the source point cloud should be defined in child classes.")
 
     def update_variance(self):
+        """
+        Placeholder for child classes.
+        """
         raise NotImplementedError(
             "Updating the Gaussian variance for the mixture model should be defined in child classes.")
 
     def iterate(self):
+        """
+        Perform one iteration of the EM algorithm.
+        """
         self.expectation()
         self.maximization()
         self.iteration += 1
 
     def expectation(self):
+        """
+        Compute the expectation step of the EM algorithm.
+        """
         P = np.sum((self.X[None, :, :] - self.TY[:, None, :])**2, axis=2) # (M, N)
         P = np.exp(-P/(2*self.sigma2))
         c = (2*np.pi*self.sigma2)**(self.D/2)*self.w/(1. - self.w)*self.M/self.N
@@ -171,8 +261,12 @@ class EMRegistration(object):
         self.Pt1 = np.sum(self.P, axis=0)
         self.P1 = np.sum(self.P, axis=1)
         self.Np = np.sum(self.P1)
+        self.PX = np.matmul(self.P, self.X)
 
     def maximization(self):
+        """
+        Compute the maximization step of the EM algorithm.
+        """
         self.update_transform()
         self.transform_point_cloud()
         self.update_variance()
