@@ -36,7 +36,7 @@ class RigidRegistration(EMRegistration):
     #     Defined in Fig. 2 of https://arxiv.org/pdf/0905.2635.pdf.
 
 
-    def __init__(self, R=None, t=None, s=None, *args, **kwargs):
+    def __init__(self, R=None, t=None, s=None, scale=True, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.D != 2 and self.D != 3:
             raise ValueError(
@@ -57,6 +57,7 @@ class RigidRegistration(EMRegistration):
         self.R = np.eye(self.D) if R is None else R
         self.t = np.atleast_2d(np.zeros((1, self.D))) if t is None else t
         self.s = 1 if s is None else s
+        self.scale = scale
 
     def update_transform(self):
         """
@@ -88,8 +89,10 @@ class RigidRegistration(EMRegistration):
         # Calculate the rotation matrix using Eq. 9 of https://arxiv.org/pdf/0905.2635.pdf.
         self.R = np.transpose(np.dot(np.dot(U, np.diag(C)), V))
         # Update scale and translation using Fig. 2 of https://arxiv.org/pdf/0905.2635.pdf.
-        self.s = np.trace(np.dot(np.transpose(self.A),
-                                 np.transpose(self.R))) / self.YPY
+        if self.scale is True:
+            self.s = np.trace(np.dot(np.transpose(self.A), np.transpose(self.R))) / self.YPY
+        else:
+            pass
         self.t = np.transpose(muX) - self.s * \
             np.dot(np.transpose(self.R), np.transpose(muY))
 

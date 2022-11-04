@@ -1,8 +1,16 @@
 #############
 Python-CPD
 #############
-.. image:: https://travis-ci.com/siavashk/pycpd.svg?branch=master
-    :target: https://travis-ci.com/siavashk/pycpd
+
+.. |master_badge| image:: https://github.com/siavashk/pycpd/actions/workflows/build-test.yml/badge.svg?branch=master
+.. |development_badge| image:: https://github.com/siavashk/pycpd/actions/workflows/build-test.yml/badge.svg?branch=development
+
++-----------------+---------------------+
+| master          | |master_badge|      |
++-----------------+---------------------+
+| development     | |development_badge| |
++-----------------+---------------------+
+
 
 `Documentation <https://siavashk.github.io/pycpd/>`_
 
