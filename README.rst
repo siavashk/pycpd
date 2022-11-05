@@ -29,15 +29,18 @@ The CPD algorithm is a registration method for aligning two point clouds. In thi
 The registration methods work for 2D and 3D point clouds. For more information, please refer to my `blog <http://siavashk.github.io/2017/05/14/coherent-point-drift/>`_.
 
 *************
-Pip Install
+Installation
 *************
+
+Install from PyPI
+#################
+
 .. code-block:: bash
 
   pip install pycpd
 
-************************
-Installation From Source
-************************
+Installation from Source
+########################
 
 Clone the repository to a location, referred to as the ``root`` folder. For example:
 
@@ -58,7 +61,10 @@ or
   make requirements
   make build
 
-For running sample registration examples under ``examples``, you will need ``matplotlib`` to visualize the registration. This can be downloaded by running:
+Install Matplotlib for Visualization
+####################################
+
+For running sample registration examples under ``/examples``, you will need ``Matplotlib`` to visualize the registration. This can be downloaded by running:
 
 .. code-block:: bash
 
