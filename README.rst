@@ -116,3 +116,14 @@ The documentation can be built using pydoc3
   
   make dev
   make doc
+
+************
+Contributing
+************
+
+Contributions are welcome. Please see the guidelines outlined in the document: `CONTRIBUTING <https://github.com/siavashk/pycpd/blob/master/CONTRIBUTING.md>`_.
+
+***************
+Code of Conduct
+***************
+We have adopted the code of conduct defined by the `Contributor Covenant <https://www.contributor-covenant.org/>`_ to clarify expected behavior in our community. For more information see the `Code of Conduct <https://github.com/siavashk/pycpd/blob/master/CODE_OF_CONDUCT.md>`_.
