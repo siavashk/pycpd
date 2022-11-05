@@ -15,9 +15,15 @@ def visualize(iteration, error, X, Y, ax):
     plt.pause(0.001)
 
 
-def main():
+def main(true_rigid=True):
     X = np.loadtxt('data/fish_target.txt')
-    Y = np.loadtxt('data/fish_source.txt')
+    if true_rigid is True:
+        theta = np.pi / 6.0
+        R = np.array([[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]])
+        t = np.array([0.5, 1.0])
+        Y = np.dot(X, R) + t
+    else:
+        Y = np.loadtxt('data/fish_source.txt')
 
     fig = plt.figure()
     fig.add_axes([0, 0, 1, 1])
