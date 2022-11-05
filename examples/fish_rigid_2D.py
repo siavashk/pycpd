@@ -35,4 +35,4 @@ def main(true_rigid=True):
 
 
 if __name__ == '__main__':
-    main()
+    main(true_rigid=True)
