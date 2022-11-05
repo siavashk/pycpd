@@ -56,8 +56,9 @@ These steps are repeated until the root mean squared point-to-point distances
 from (1) converges. 
 
 The coherent point drift (CPD) algorithm was created by Myronenko and Song 
-[@5432191] to overcome many of the limitaitons of ICP and other previous registration
-methods. Namely, these other methods did not necessarily generalize to greater than 
+[@5432191] to overcome many of the limitaitons of ICP and other previous 
+registration methods[@121791; @CHEN1992145; FITZGIBBON20031145; 924423]. 
+Namely, these other methods did not necessarily generalize to greater than 
 3 dimensions and they were prone to errors such as noise, outliers, or missing 
 points. The CPD alogirthm is a probabilistic multidimensional algorithm that is 
 robust and works for both rigid and non-rigid registration. In CPD the moving 
@@ -118,5 +119,5 @@ We acknowledge contributions from:
 - normanius for pointing out that the contribution of uniform distribution was not being added in the E-step.
 - Kai Zhang for finding a bug when transforming a point cloud using rigid registration parameters.
 - sandyhsia for finding a bug when updating the variance during deformable registration.
-
+- Arthur Porto for contributions to the community, both in the issues and adding a priors option to cpd
 # References
