@@ -88,6 +88,80 @@ python examples/fish_{Transform}_{Dimension}.py
 
 where ``Transform`` is either ``rigid``, ``affine`` or ``deformable`` and ``Dimension`` is either ``2D`` or ``3D``. Note that examples are meant to be run from the ``root`` folder.
 
+********
+Example
+********
+
+Basic Usage
+###########
+
+Basic usage includes providing any of the registration methods with 2 arrays that are MxN & BxN. E.g., they can have different numbers of points (M & B) but must have the same number of dimensions per point (N).
+
+.. code-block:: python
+
+  from pycpd import RigidRegistration
+  import numpy as np
+
+  # create 2D target points (you can get these from any source you desire)
+  # creating a square w/ 2 additional points. 
+  target = np.array([[0, 0], [0, 1], [1, 0], [1, 1], [0.5, 0], [0, 0.5]])
+  print('Target Points: \n', target)
+
+  # create a translation to apply to the target for testing the registration
+  translation = [1, 0]
+
+  # create a fake source by adding a translation to the target.
+  # in a real use, you would load the source points from a file or other source. 
+  # the only requirement is that this array also be 2-dimensional and that the 
+  # second dimension be the same length as the second dimension of the target array.
+  source = target + translation
+  print('Source Points: \n', source)
+
+  # create a RigidRegistration object
+  reg = RigidRegistration(X=target, Y=source)
+  # run the registration & collect the results
+  TY, (s_reg, R_reg, t_reg) = reg.register()
+
+  # TY is the transformed source points
+  # the values in () are the registration parameters.
+  # In this case of rigid registration they are:
+  #     s_reg the scale of the registration
+  #     R_reg the rotation matrix of the registration
+  #     t_reg the translation of the registration
+
+
+The affine and deformable registration methods are used in the same way, but provide their respective transformation parameters.
+
+Apply Transform to Another Point Cloud
+#######################################
+Sometimes you may want to apply the transformation parameters to another point cloud. For example, if you have a very large point cloud
+it is sometimes appropriate to randomly sample some of the points for registration and then apply the transformation to the entire point cloud. 
+
+To do this, after fitting the above registration, you would run `reg.transform_point_cloud(Y=points_to_transform)`. This will apply the learned 
+registration parameters to the point cloud `points_to_transform` and return the transformed point cloud.
+
+Tuning Registration parameters
+##############################
+
+For rigid and affine registrations the main parameter you can tweak is `w`. The `w` parameter is an indication of the amount of noise in the 
+point clouds `[0,1]`, by default it is set to `0` assuming no noise, but can be set at any value `0 <= w <1` with higher values indicating more noise. 
+
+For deformable registration, you can also tune `alpha`, `beta`, and use `low_rank`. 
+
+The `alpha` parameter (`lambda` in the original paper) identifies a tradeoff between making points align & regularization of the deformation. 
+A higher value makes the deformation more rigid, a lower value makes the deformation more flexible. 
+
+The `beta` is the width of the Gaussian kernel used to regularize the deformation and thus identifies how far apart points should be
+to move them together (coherently). `beta` depends on the scale/size of your points cloud. Tuning `beta` can be simplified by normalizing 
+the point cloud to a unit sphere distance.
+
+The `low_rank` parameter is a boolean that indicates whether to use a regularized form of the deformation field. This further
+constrains the deformation, while vastly speeding up the optimization. `num_eig` is the number of eigenvalues to use in the low rank 
+approximation. `num_eig` should be less than the number of points in the point cloud, the lower the smoother the deformation and the
+faster the optimization.
+
+
+
 *******
 Testing
 *******
