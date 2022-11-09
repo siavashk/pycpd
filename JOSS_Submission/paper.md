@@ -56,14 +56,15 @@ These steps are repeated until the root mean squared point-to-point distances
 from (1) converges. 
 
 The coherent point drift (CPD) algorithm was created by Myronenko and Song 
-[@5432191] to overcome many of the limitaitons of ICP and other previous registration
-methods. Namely, these other methods didnt necessarily generalize to greater than 
+[@5432191] to overcome many of the limitaitons of ICP and other previous 
+registration methods[@121791; @CHEN1992145; FITZGIBBON20031145; 924423]. 
+Namely, these other methods did not necessarily generalize to greater than 
 3 dimensions and they were prone to errors such as noise, outliers, or missing 
 points. The CPD alogirthm is a probabilistic multidimensional algorithm that is 
 robust and works for both rigid and non-rigid registration. In CPD the moving 
 point cloud is modelled as a Gaussian Mixture Model (GMM) and the fixed point 
 cloud is treated as observations from the GMM. The optimal transformation 
-parameters maximze the Maximum Likelihood / Maximum A Posteriori (MAP) 
+parameters maximize the Maximum Likelihood / Maximum A Posteriori (MAP) 
 estimation that the observed point cloud is drawn from the GMM. A key point of
 the CPD algorithm is that it forces the points to move coherently by preserving 
 topological structure. The CPD algorithm is also an iterative algorithm that 
@@ -77,7 +78,8 @@ are iterated until convergence.
 # Statement of need
 Due to the robustness and the broad array of uses for the CPD algorithm 
 the original CPD paper has currently (March 2022) been referenced >2000 
-times. The CPD algorithm is available in Matlab. However, to the best of 
+times. The CPD algorithm is available in Matlab[@MATLAB] and an open-source
+C++ version has been implemented[@gadomski]. However, to the best of 
 our knowledge, no open-source python version previously existed. In this 
 paper we present a pure NumPy[@harris2020array] version of the CPD 
 algorithm to enable general use of CPD for the Python community. 
@@ -100,7 +102,7 @@ for deformable registration that was described by Myronenko and Song
 is used to reduce computation time and has the added benefit of regularizing 
 the non-rigid deformation. 
 
-![Visualization of the 3D rigid registration from the examples included in the library. Each panel represents a different iteration in the registration process.](rigid_bunny_3d_registration.tiff)
+![Visualization of the 3D rigid registration from the examples included in the library. Each panel represents a different iteration in the registration process. The Q parameter is the objective function that is optimized using the EM-algorithm during registration.](rigid_bunny_3d_registration.tiff)
 
 Examples of the PyCPD algorithm are included (**Figure 1**). Examples are available for
 2D and 3D versions of all registration methods (rigid, affine, deformable). 
@@ -117,5 +119,5 @@ We acknowledge contributions from:
 - normanius for pointing out that the contribution of uniform distribution was not being added in the E-step.
 - Kai Zhang for finding a bug when transforming a point cloud using rigid registration parameters.
 - sandyhsia for finding a bug when updating the variance during deformable registration.
-
+- Arthur Porto for contributions to the community, both in the issues and adding a priors option to cpd
 # References

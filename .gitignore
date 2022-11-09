@@ -11,3 +11,4 @@ testing/__pycache__/*
 /images/rigid_bunny/*.pptx
 
 *.pdf
+.vscode/*
