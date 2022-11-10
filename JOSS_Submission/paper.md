@@ -57,7 +57,7 @@ from (1) converges.
 
 The coherent point drift (CPD) algorithm was created by Myronenko and Song 
 [@5432191] to overcome many of the limitaitons of ICP and other previous 
-registration methods[@121791; @CHEN1992145; FITZGIBBON20031145; 924423]. 
+registration methods[@121791; @CHEN1992145; @FITZGIBBON20031145; @924423]. 
 Namely, these other methods did not necessarily generalize to greater than 
 3 dimensions and they were prone to errors such as noise, outliers, or missing 
 points. The CPD alogirthm is a probabilistic multidimensional algorithm that is 
