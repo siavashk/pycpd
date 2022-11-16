@@ -30,10 +30,10 @@ particularly computer vision. Point clouds come from many types of data such
 as LIDAR commonly used for self-driving vehicles, and other sorts of 3D scanners 
 (e.g., structured light) are commonly used to map the surface of physical objects.
 Point clouds are also used to represent the surface of an anatomical structure
-extracted from a medical image. Point cloud registration finds a transformaton 
+extracted from a medical image. Point cloud registration finds a transformation 
 from one point cloud to another. Point cloud registration has use cases in many 
 fields from self-driving vehicles to medical imaging and virtual reality. 
-Typically, point cloud registraton is classified into rigid (only rotations or
+Typically, point cloud registration is classified into rigid (only rotations or
 translations), affine (rigid + shearing and scaling) and non-rigid also called 
 deformable registration (non-linear deformation). 
 
@@ -48,19 +48,19 @@ an iterative algorithm where the following steps are iterated:
   (1) for every point on the moving point cloud find the closest point on the 
   fixed point cloud
   (2) use a least squares approach to find the optimal transformation matrix 
-  (rotation, tranlsation, scaling, shear) to align the point correspondences
+  (rotation, translation, scaling, shear) to align the point correspondences
   found in (1)
   (3) apply the transformation from (2) to the moving point cloud
 
 These steps are repeated until the root mean squared point-to-point distances
-from (1) converges. 
+from (1) converge. 
 
 The coherent point drift (CPD) algorithm was created by Myronenko and Song 
-[@5432191] to overcome many of the limitaitons of ICP and other previous 
-registration methods[@121791; @CHEN1992145; @FITZGIBBON20031145; @924423]. 
-Namely, these other methods did not necessarily generalize to greater than 
-3 dimensions and they were prone to errors such as noise, outliers, or missing 
-points. The CPD alogirthm is a probabilistic multidimensional algorithm that is 
+[@5432191] to overcome many of the limitations of ICP and other previous 
+registration methods [@121791; @CHEN1992145; @FITZGIBBON20031145; @924423]. 
+Namely, these other methods did not necessarily generalize to dimensions greater than 
+3 and they were prone to errors such as noise, outliers, or missing 
+points. The CPD algorithm is a probabilistic multidimensional algorithm that is 
 robust and works for both rigid and non-rigid registration. In CPD the moving 
 point cloud is modelled as a Gaussian Mixture Model (GMM) and the fixed point 
 cloud is treated as observations from the GMM. The optimal transformation 
@@ -78,20 +78,19 @@ are iterated until convergence.
 # Statement of need
 Due to the robustness and the broad array of uses for the CPD algorithm 
 the original CPD paper has currently (March 2022) been referenced >2000 
-times. The CPD algorithm is available in Matlab[@MATLAB] and an open-source
-C++ version has been implemented[@gadomski]. However, to the best of 
+times. The CPD algorithm is available in Matlab [@MATLAB] and an open-source
+C++ version has been implemented [@gadomski]. However, to the best of 
 our knowledge, no open-source python version previously existed. In this 
 paper we present a pure NumPy[@harris2020array] version of the CPD 
 algorithm to enable general use of CPD for the Python community. 
-Furthermore, the full implementation in Numpy makes the algorithm accesible 
+Furthermore, the full implementation in NumPy makes the algorithm accessible 
 for others to learn from. To help in learning, a blog post that coincides 
-with this library has previously been [published]
-(http://siavashk.github.io/2017/05/14/coherent-point-drift/)[@khallaghi_2017].
+with this library has previously been [published](http://siavashk.github.io/2017/05/14/coherent-point-drift/) [@khallaghi_2017].
 
 # Summary
 The PyCPD package implements the CPD algorithm in NumPy. The library itself 
 includes a module to implement the Expectation Maximization (EM) algorithm. 
-Sub-modules inherent the EM functionality and implement rigid, affine, and 
+Sub-modules inherit the EM functionality and implement rigid, affine, and 
 deformable registration using EM. CPD registration using affine, rigid, 
 and deformable methods all allow for the transformation learned from CPD 
 to be applied to any point cloud. Thus, it is possible to learn the 
@@ -104,15 +103,18 @@ the non-rigid deformation.
 
 ![Visualization of the 3D rigid registration from the examples included in the library. Each panel represents a different iteration in the registration process. The Q parameter is the objective function that is optimized using the EM-algorithm during registration.](rigid_bunny_3d_registration.tiff)
 
-Examples of the PyCPD algorithm are included (**Figure 1**). Examples are available for
-2D and 3D versions of all registration methods (rigid, affine, deformable). 
-Examples of how to use the low-rank approximation as well as how to use 
-a sub-set of the points for registration are also included in the examples. 
+Examples of how to use the PyCPD algorithm are included in the package, 
+**Figure 1** displays the visualization corresponding with a 3D rigid
+registration example. Examples are available for 2D and 3D versions of 
+all registration methods (rigid, affine, deformable). Examples of how to 
+use the low-rank approximation as well as how to use a sub-set of the 
+points for registration are also included in the examples. 
 
 
 # Acknowledgements
 
 We acknowledge contributions from: 
+
 - Alvin Wan for testing on Python 3.x.
 - Talley Lambert for pointing out that the moving point cloud should be immutable during registration.
 - Matthew DiFranco for fixing the check for target point clouds.
@@ -120,4 +122,5 @@ We acknowledge contributions from:
 - Kai Zhang for finding a bug when transforming a point cloud using rigid registration parameters.
 - sandyhsia for finding a bug when updating the variance during deformable registration.
 - Arthur Porto for contributions to the community, both in the issues and adding a priors option to cpd
+
 # References
