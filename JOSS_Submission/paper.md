@@ -81,11 +81,11 @@ the original CPD paper has currently (March 2022) been referenced >2000
 times. The CPD algorithm is available in Matlab [@MATLAB] and an open-source
 C++ version has been implemented [@gadomski]. However, to the best of 
 our knowledge, no open-source python version previously existed. In this 
-paper we present a pure NumPy[@harris2020array] version of the CPD 
+paper we present a pure NumPy [@harris2020array] version of the CPD 
 algorithm to enable general use of CPD for the Python community. 
 Furthermore, the full implementation in NumPy makes the algorithm accessible 
 for others to learn from. To help in learning, a blog post that coincides 
-with this library has previously been [published](http://siavashk.github.io/2017/05/14/coherent-point-drift/) [@khallaghi_2017].
+with this library has previously been published [@khallaghi_2017].
 
 # Summary
 The PyCPD package implements the CPD algorithm in NumPy. The library itself 
@@ -104,7 +104,7 @@ the non-rigid deformation.
 ![Visualization of the 3D rigid registration from the examples included in the library. Each panel represents a different iteration in the registration process. The Q parameter is the objective function that is optimized using the EM-algorithm during registration.](rigid_bunny_3d_registration.tiff)
 
 Examples of how to use the PyCPD algorithm are included in the package, 
-**Figure 1** displays the visualization corresponding with a 3D rigid
+Figure 1 displays the visualization corresponding with a 3D rigid
 registration example. Examples are available for 2D and 3D versions of 
 all registration methods (rigid, affine, deformable). Examples of how to 
 use the low-rank approximation as well as how to use a sub-set of the 
