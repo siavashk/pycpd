@@ -4,11 +4,24 @@ from pycpd import ConstrainedDeformableRegistration
 import numpy as np
 import time
 
+IDs = [1,10,20,30]
+marker_size = 100
 
 def visualize(iteration, error, X, Y, ax):
     plt.cla()
-    ax.scatter(X[:, 0],  X[:, 1], color='red', label='Target')
-    ax.scatter(Y[:, 0],  Y[:, 1], color='blue', label='Source')
+
+    ids_X = np.arange(0, X.shape[0])
+    ids_X = np.delete(ids_X, IDs)
+
+    ids_Y = np.arange(0, Y.shape[0])
+    ids_Y = np.delete(ids_Y, IDs)
+
+    ax.scatter(X[ids_X, 0],  X[ids_X, 1], color='red', label='Target')
+    ax.scatter(Y[ids_Y, 0],  Y[ids_Y, 1], color='blue', label='Source')
+
+    ax.scatter(X[IDs, 0],  X[IDs, 1], color='blue', label='Target Constrained', s=marker_size, facecolors='none')
+    ax.scatter(Y[IDs, 0],  Y[IDs, 1], color='green', label='Source Constrained', s=marker_size, marker=(5, 1))
+
     plt.text(0.87, 0.92, 'Iteration: {:d}'.format(
         iteration), horizontalalignment='center', verticalalignment='center', transform=ax.transAxes, fontsize='x-large')
     ax.legend(loc='upper left', fontsize='x-large')
@@ -23,8 +36,8 @@ def main():
     # simulate a pointcloud missing certain parts
     X = X[:61]
     # select fixed correspondences
-    src_id = np.int32([1,10,20,30])
-    tgt_id = np.int32([1,10,20,30])
+    src_id = np.int32(IDs)
+    tgt_id = np.int32(IDs)
 
     fig = plt.figure()
     fig.add_axes([0, 0, 1, 1])
