@@ -2,26 +2,7 @@ from builtins import super
 import numpy as np
 import numbers
 from .emregistration import EMRegistration
-
-
-def gaussian_kernel(X, beta, Y=None):
-    if Y is None:
-        Y = X
-    diff = X[:, None, :] - Y[None, :,  :]
-    diff = np.square(diff)
-    diff = np.sum(diff, 2)
-    return np.exp(-diff / (2 * beta**2))
-
-def low_rank_eigen(G, num_eig):
-    """
-    Calculate num_eig eigenvectors and eigenvalues of gaussian matrix G.
-    Enables lower dimensional solving.
-    """
-    S, Q = np.linalg.eigh(G)
-    eig_indices = list(np.argsort(np.abs(S))[::-1][:num_eig])
-    Q = Q[:, eig_indices]  # eigenvectors
-    S = S[eig_indices]  # eigenvalues.
-    return Q, S
+from .utility import gaussian_kernel, low_rank_eigen
 
 
 class ConstrainedDeformableRegistration(EMRegistration):
