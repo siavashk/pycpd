@@ -33,7 +33,26 @@ def is_positive_semi_definite(R):
     if not isinstance(R, (np.ndarray, np.generic)):
         raise ValueError(&#39;Encountered an error while checking if the matrix is positive semi definite. \
             Expected a numpy array, instead got : {}&#39;.format(R))
-    return np.all(np.linalg.eigvals(R) &gt; 0)</code></pre>
+    return np.all(np.linalg.eigvals(R) &gt; 0)
+
+def gaussian_kernel(X, beta, Y=None):
+    if Y is None:
+        Y = X
+    diff = X[:, None, :] - Y[None, :,  :]
+    diff = np.square(diff)
+    diff = np.sum(diff, 2)
+    return np.exp(-diff / (2 * beta**2))
+
+def low_rank_eigen(G, num_eig):
+    &#34;&#34;&#34;
+    Calculate num_eig eigenvectors and eigenvalues of gaussian matrix G.
+    Enables lower dimensional solving.
+    &#34;&#34;&#34;
+    S, Q = np.linalg.eigh(G)
+    eig_indices = list(np.argsort(np.abs(S))[::-1][:num_eig])
+    Q = Q[:, eig_indices]  # eigenvectors
+    S = S[eig_indices]  # eigenvalues.
+    return Q, S</code></pre>
 </details>
 </section>
 <section>
@@ -43,6 +62,24 @@ def is_positive_semi_definite(R):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
+<dt id="pycpd.utility.gaussian_kernel"><code class="name flex">
+<span>def <span class="ident">gaussian_kernel</span></span>(<span>X, beta, Y=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def gaussian_kernel(X, beta, Y=None):
+    if Y is None:
+        Y = X
+    diff = X[:, None, :] - Y[None, :,  :]
+    diff = np.square(diff)
+    diff = np.sum(diff, 2)
+    return np.exp(-diff / (2 * beta**2))</code></pre>
+</details>
+</dd>
 <dt id="pycpd.utility.is_positive_semi_definite"><code class="name flex">
 <span>def <span class="ident">is_positive_semi_definite</span></span>(<span>R)</span>
 </code></dt>
@@ -57,6 +94,28 @@ def is_positive_semi_definite(R):
         raise ValueError(&#39;Encountered an error while checking if the matrix is positive semi definite. \
             Expected a numpy array, instead got : {}&#39;.format(R))
     return np.all(np.linalg.eigvals(R) &gt; 0)</code></pre>
+</details>
+</dd>
+<dt id="pycpd.utility.low_rank_eigen"><code class="name flex">
+<span>def <span class="ident">low_rank_eigen</span></span>(<span>G, num_eig)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Calculate num_eig eigenvectors and eigenvalues of gaussian matrix G.
+Enables lower dimensional solving.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def low_rank_eigen(G, num_eig):
+    &#34;&#34;&#34;
+    Calculate num_eig eigenvectors and eigenvalues of gaussian matrix G.
+    Enables lower dimensional solving.
+    &#34;&#34;&#34;
+    S, Q = np.linalg.eigh(G)
+    eig_indices = list(np.argsort(np.abs(S))[::-1][:num_eig])
+    Q = Q[:, eig_indices]  # eigenvectors
+    S = S[eig_indices]  # eigenvalues.
+    return Q, S</code></pre>
 </details>
 </dd>
 </dl>
@@ -77,7 +136,9 @@ def is_positive_semi_definite(R):
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
+<li><code><a title="pycpd.utility.gaussian_kernel" href="#pycpd.utility.gaussian_kernel">gaussian_kernel</a></code></li>
 <li><code><a title="pycpd.utility.is_positive_semi_definite" href="#pycpd.utility.is_positive_semi_definite">is_positive_semi_definite</a></code></li>
+<li><code><a title="pycpd.utility.low_rank_eigen" href="#pycpd.utility.low_rank_eigen">low_rank_eigen</a></code></li>
 </ul>
 </li>
 </ul>

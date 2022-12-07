@@ -30,66 +30,7 @@
 import numpy as np
 import numbers
 from .emregistration import EMRegistration
-
-
-def gaussian_kernel(X, beta, Y=None):
-    &#34;&#34;&#34;
-    Calculate gaussian kernel matrix.
-
-    Attributes
-    ----------
-    X: numpy array
-        NxD array of points for creating gaussian.
-    
-    beta: float
-        Width of the Gaussian kernel.
-    
-    Y: numpy array, optional
-        MxD array of secondary points to calculate
-        kernel with. Used if predicting on points
-        not used to train.
-        
-    Returns
-    -------
-    K: numpy array
-        Gaussian kernel matrix.
-            NxN if Y is None
-            NxM if Y is not None
-    &#34;&#34;&#34;
-    if Y is None:
-        Y = X
-    diff = X[:, None, :] - Y[None, :,  :]
-    diff = np.square(diff)
-    diff = np.sum(diff, 2)
-    return np.exp(-diff / (2 * beta**2))
-
-def low_rank_eigen(G, num_eig):
-    &#34;&#34;&#34;
-    Calculate num_eig eigenvectors and eigenvalues of gaussian matrix G.
-    Enables lower dimensional solving.
-
-    Attributes
-    ----------
-    G: numpy array
-        Gaussian kernel matrix.
-    
-    num_eig: int
-        Number of eigenvectors to use in lowrank calculation. 
-    
-    Returns
-    -------
-    Q: numpy array
-        D x num_eig array of eigenvectors.
-    
-    S: numpy array
-        num_eig array of eigenvalues.
-    &#34;&#34;&#34;
-    S, Q = np.linalg.eigh(G)
-    eig_indices = list(np.argsort(np.abs(S))[::-1][:num_eig])
-    Q = Q[:, eig_indices]  # eigenvectors
-    S = S[eig_indices]  # eigenvalues.
-    return Q, S
-
+from .utility import gaussian_kernel, low_rank_eigen
 
 class DeformableRegistration(EMRegistration):
     &#34;&#34;&#34;
@@ -236,120 +177,6 @@ class DeformableRegistration(EMRegistration):
 <section>
 </section>
 <section>
-<h2 class="section-title" id="header-functions">Functions</h2>
-<dl>
-<dt id="pycpd.deformable_registration.gaussian_kernel"><code class="name flex">
-<span>def <span class="ident">gaussian_kernel</span></span>(<span>X, beta, Y=None)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Calculate gaussian kernel matrix.</p>
-<h2 id="attributes">Attributes</h2>
-<dl>
-<dt><strong><code>X</code></strong> :&ensp;<code>numpy array</code></dt>
-<dd>NxD array of points for creating gaussian.</dd>
-<dt><strong><code>beta</code></strong> :&ensp;<code>float</code></dt>
-<dd>Width of the Gaussian kernel.</dd>
-<dt><strong><code>Y</code></strong> :&ensp;<code>numpy array</code>, optional</dt>
-<dd>MxD array of secondary points to calculate
-kernel with. Used if predicting on points
-not used to train.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>K</code></strong> :&ensp;<code>numpy array</code></dt>
-<dd>Gaussian kernel matrix.
-NxN if Y is None
-NxM if Y is not None</dd>
-</dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def gaussian_kernel(X, beta, Y=None):
-    &#34;&#34;&#34;
-    Calculate gaussian kernel matrix.
-
-    Attributes
-    ----------
-    X: numpy array
-        NxD array of points for creating gaussian.
-    
-    beta: float
-        Width of the Gaussian kernel.
-    
-    Y: numpy array, optional
-        MxD array of secondary points to calculate
-        kernel with. Used if predicting on points
-        not used to train.
-        
-    Returns
-    -------
-    K: numpy array
-        Gaussian kernel matrix.
-            NxN if Y is None
-            NxM if Y is not None
-    &#34;&#34;&#34;
-    if Y is None:
-        Y = X
-    diff = X[:, None, :] - Y[None, :,  :]
-    diff = np.square(diff)
-    diff = np.sum(diff, 2)
-    return np.exp(-diff / (2 * beta**2))</code></pre>
-</details>
-</dd>
-<dt id="pycpd.deformable_registration.low_rank_eigen"><code class="name flex">
-<span>def <span class="ident">low_rank_eigen</span></span>(<span>G, num_eig)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Calculate num_eig eigenvectors and eigenvalues of gaussian matrix G.
-Enables lower dimensional solving.</p>
-<h2 id="attributes">Attributes</h2>
-<dl>
-<dt><strong><code>G</code></strong> :&ensp;<code>numpy array</code></dt>
-<dd>Gaussian kernel matrix.</dd>
-<dt><strong><code>num_eig</code></strong> :&ensp;<code>int</code></dt>
-<dd>Number of eigenvectors to use in lowrank calculation.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>Q</code></strong> :&ensp;<code>numpy array</code></dt>
-<dd>D x num_eig array of eigenvectors.</dd>
-<dt><strong><code>S</code></strong> :&ensp;<code>numpy array</code></dt>
-<dd>num_eig array of eigenvalues.</dd>
-</dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def low_rank_eigen(G, num_eig):
-    &#34;&#34;&#34;
-    Calculate num_eig eigenvectors and eigenvalues of gaussian matrix G.
-    Enables lower dimensional solving.
-
-    Attributes
-    ----------
-    G: numpy array
-        Gaussian kernel matrix.
-    
-    num_eig: int
-        Number of eigenvectors to use in lowrank calculation. 
-    
-    Returns
-    -------
-    Q: numpy array
-        D x num_eig array of eigenvectors.
-    
-    S: numpy array
-        num_eig array of eigenvalues.
-    &#34;&#34;&#34;
-    S, Q = np.linalg.eigh(G)
-    eig_indices = list(np.argsort(np.abs(S))[::-1][:num_eig])
-    Q = Q[:, eig_indices]  # eigenvectors
-    S = S[eig_indices]  # eigenvalues.
-    return Q, S</code></pre>
-</details>
-</dd>
-</dl>
 </section>
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
@@ -517,6 +344,10 @@ Enables lower dimensional solving.</p>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="pycpd.emregistration.EMRegistration" href="emregistration.html#pycpd.emregistration.EMRegistration">EMRegistration</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="pycpd.constrained_deformable_registration.ConstrainedDeformableRegistration" href="constrained_deformable_registration.html#pycpd.constrained_deformable_registration.ConstrainedDeformableRegistration">ConstrainedDeformableRegistration</a></li>
 </ul>
 <h3>Methods</h3>
 <dl>
@@ -701,12 +532,6 @@ See the update rule for sigma2 in Eq. 23 of of <a href="https://arxiv.org/pdf/09
 <li><h3>Super-module</h3>
 <ul>
 <li><code><a title="pycpd" href="index.html">pycpd</a></code></li>
-</ul>
-</li>
-<li><h3><a href="#header-functions">Functions</a></h3>
-<ul class="">
-<li><code><a title="pycpd.deformable_registration.gaussian_kernel" href="#pycpd.deformable_registration.gaussian_kernel">gaussian_kernel</a></code></li>
-<li><code><a title="pycpd.deformable_registration.low_rank_eigen" href="#pycpd.deformable_registration.low_rank_eigen">low_rank_eigen</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>

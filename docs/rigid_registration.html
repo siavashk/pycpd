@@ -64,17 +64,17 @@ class RigidRegistration(EMRegistration):
     #     Defined in Fig. 2 of https://arxiv.org/pdf/0905.2635.pdf.
 
 
-    def __init__(self, R=None, t=None, s=None, *args, **kwargs):
+    def __init__(self, R=None, t=None, s=None, scale=True, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.D != 2 and self.D != 3:
             raise ValueError(
                 &#39;Rigid registration only supports 2D or 3D point clouds. Instead got {}.&#39;.format(self.D))
 
-        if R is not None and (R.ndim is not 2 or R.shape[0] is not self.D or R.shape[1] is not self.D or not is_positive_semi_definite(R)):
+        if R is not None and ((R.ndim != 2) or (R.shape[0] != self.D) or (R.shape[1] != self.D) or not is_positive_semi_definite(R)):
             raise ValueError(
                 &#39;The rotation matrix can only be initialized to {}x{} positive semi definite matrices. Instead got: {}.&#39;.format(self.D, self.D, R))
 
-        if t is not None and (t.ndim is not 2 or t.shape[0] is not 1 or t.shape[1] is not self.D):
+        if t is not None and ((t.ndim != 2) or (t.shape[0] != 1) or (t.shape[1] != self.D)):
             raise ValueError(
                 &#39;The translation vector can only be initialized to 1x{} positive semi definite matrices. Instead got: {}.&#39;.format(self.D, t))
 
@@ -85,6 +85,7 @@ class RigidRegistration(EMRegistration):
         self.R = np.eye(self.D) if R is None else R
         self.t = np.atleast_2d(np.zeros((1, self.D))) if t is None else t
         self.s = 1 if s is None else s
+        self.scale = scale
 
     def update_transform(self):
         &#34;&#34;&#34;
@@ -116,8 +117,10 @@ class RigidRegistration(EMRegistration):
         # Calculate the rotation matrix using Eq. 9 of https://arxiv.org/pdf/0905.2635.pdf.
         self.R = np.transpose(np.dot(np.dot(U, np.diag(C)), V))
         # Update scale and translation using Fig. 2 of https://arxiv.org/pdf/0905.2635.pdf.
-        self.s = np.trace(np.dot(np.transpose(self.A),
-                                 np.transpose(self.R))) / self.YPY
+        if self.scale is True:
+            self.s = np.trace(np.dot(np.transpose(self.A), np.transpose(self.R))) / self.YPY
+        else:
+            pass
         self.t = np.transpose(muX) - self.s * \
             np.dot(np.transpose(self.R), np.transpose(muY))
 
@@ -191,7 +194,7 @@ class RigidRegistration(EMRegistration):
 <dl>
 <dt id="pycpd.rigid_registration.RigidRegistration"><code class="flex name class">
 <span>class <span class="ident">RigidRegistration</span></span>
-<span>(</span><span>R=None, t=None, s=None, *args, **kwargs)</span>
+<span>(</span><span>R=None, t=None, s=None, scale=True, *args, **kwargs)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Rigid registration.</p>
@@ -243,17 +246,17 @@ Defined in Fig. 2 of <a href="https://arxiv.org/pdf/0905.2635.pdf.">https://arxi
     #     Defined in Fig. 2 of https://arxiv.org/pdf/0905.2635.pdf.
 
 
-    def __init__(self, R=None, t=None, s=None, *args, **kwargs):
+    def __init__(self, R=None, t=None, s=None, scale=True, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.D != 2 and self.D != 3:
             raise ValueError(
                 &#39;Rigid registration only supports 2D or 3D point clouds. Instead got {}.&#39;.format(self.D))
 
-        if R is not None and (R.ndim is not 2 or R.shape[0] is not self.D or R.shape[1] is not self.D or not is_positive_semi_definite(R)):
+        if R is not None and ((R.ndim != 2) or (R.shape[0] != self.D) or (R.shape[1] != self.D) or not is_positive_semi_definite(R)):
             raise ValueError(
                 &#39;The rotation matrix can only be initialized to {}x{} positive semi definite matrices. Instead got: {}.&#39;.format(self.D, self.D, R))
 
-        if t is not None and (t.ndim is not 2 or t.shape[0] is not 1 or t.shape[1] is not self.D):
+        if t is not None and ((t.ndim != 2) or (t.shape[0] != 1) or (t.shape[1] != self.D)):
             raise ValueError(
                 &#39;The translation vector can only be initialized to 1x{} positive semi definite matrices. Instead got: {}.&#39;.format(self.D, t))
 
@@ -264,6 +267,7 @@ Defined in Fig. 2 of <a href="https://arxiv.org/pdf/0905.2635.pdf.">https://arxi
         self.R = np.eye(self.D) if R is None else R
         self.t = np.atleast_2d(np.zeros((1, self.D))) if t is None else t
         self.s = 1 if s is None else s
+        self.scale = scale
 
     def update_transform(self):
         &#34;&#34;&#34;
@@ -295,8 +299,10 @@ Defined in Fig. 2 of <a href="https://arxiv.org/pdf/0905.2635.pdf.">https://arxi
         # Calculate the rotation matrix using Eq. 9 of https://arxiv.org/pdf/0905.2635.pdf.
         self.R = np.transpose(np.dot(np.dot(U, np.diag(C)), V))
         # Update scale and translation using Fig. 2 of https://arxiv.org/pdf/0905.2635.pdf.
-        self.s = np.trace(np.dot(np.transpose(self.A),
-                                 np.transpose(self.R))) / self.YPY
+        if self.scale is True:
+            self.s = np.trace(np.dot(np.transpose(self.A), np.transpose(self.R))) / self.YPY
+        else:
+            pass
         self.t = np.transpose(muX) - self.s * \
             np.dot(np.transpose(self.R), np.transpose(muY))
 
@@ -482,8 +488,10 @@ Otherwise, returns the transformed Y.</p></div>
     # Calculate the rotation matrix using Eq. 9 of https://arxiv.org/pdf/0905.2635.pdf.
     self.R = np.transpose(np.dot(np.dot(U, np.diag(C)), V))
     # Update scale and translation using Fig. 2 of https://arxiv.org/pdf/0905.2635.pdf.
-    self.s = np.trace(np.dot(np.transpose(self.A),
-                             np.transpose(self.R))) / self.YPY
+    if self.scale is True:
+        self.s = np.trace(np.dot(np.transpose(self.A), np.transpose(self.R))) / self.YPY
+    else:
+        pass
     self.t = np.transpose(muX) - self.s * \
         np.dot(np.transpose(self.R), np.transpose(muY))</code></pre>
 </details>
