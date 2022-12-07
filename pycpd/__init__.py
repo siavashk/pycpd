@@ -13,3 +13,4 @@ Distributed here: https://github.com/siavashk/pycpd
 from .rigid_registration import RigidRegistration
 from .affine_registration import AffineRegistration
 from .deformable_registration import gaussian_kernel, DeformableRegistration
+from .constrained_deformable_registration import ConstrainedDeformableRegistration

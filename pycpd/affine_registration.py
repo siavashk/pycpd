@@ -27,6 +27,7 @@ class AffineRegistration(EMRegistration):
 
     def __init__(self, B=None, t=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
         if B is not None and ((B.ndim != 2) or (B.shape[0] != self.D) or (B.shape[1] != self.D) or not is_positive_semi_definite(B)):
             raise ValueError(
                 'The rotation matrix can only be initialized to {}x{} positive semi definite matrices. Instead got: {}.'.format(self.D, self.D, B))
@@ -34,6 +35,7 @@ class AffineRegistration(EMRegistration):
         if t is not None and ((t.ndim != 2) or (t.shape[0] != 1) or (t.shape[1] != self.D)):
             raise ValueError(
                 'The translation vector can only be initialized to 1x{} positive semi definite matrices. Instead got: {}.'.format(self.D, t))
+        
         self.B = np.eye(self.D) if B is None else B
         self.t = np.atleast_2d(np.zeros((1, self.D))) if t is None else t
 

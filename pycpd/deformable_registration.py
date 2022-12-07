@@ -2,66 +2,7 @@ from builtins import super
 import numpy as np
 import numbers
 from .emregistration import EMRegistration
-
-
-def gaussian_kernel(X, beta, Y=None):
-    """
-    Calculate gaussian kernel matrix.
-
-    Attributes
-    ----------
-    X: numpy array
-        NxD array of points for creating gaussian.
-    
-    beta: float
-        Width of the Gaussian kernel.
-    
-    Y: numpy array, optional
-        MxD array of secondary points to calculate
-        kernel with. Used if predicting on points
-        not used to train.
-        
-    Returns
-    -------
-    K: numpy array
-        Gaussian kernel matrix.
-            NxN if Y is None
-            NxM if Y is not None
-    """
-    if Y is None:
-        Y = X
-    diff = X[:, None, :] - Y[None, :,  :]
-    diff = np.square(diff)
-    diff = np.sum(diff, 2)
-    return np.exp(-diff / (2 * beta**2))
-
-def low_rank_eigen(G, num_eig):
-    """
-    Calculate num_eig eigenvectors and eigenvalues of gaussian matrix G.
-    Enables lower dimensional solving.
-
-    Attributes
-    ----------
-    G: numpy array
-        Gaussian kernel matrix.
-    
-    num_eig: int
-        Number of eigenvectors to use in lowrank calculation. 
-    
-    Returns
-    -------
-    Q: numpy array
-        D x num_eig array of eigenvectors.
-    
-    S: numpy array
-        num_eig array of eigenvalues.
-    """
-    S, Q = np.linalg.eigh(G)
-    eig_indices = list(np.argsort(np.abs(S))[::-1][:num_eig])
-    Q = Q[:, eig_indices]  # eigenvectors
-    S = S[eig_indices]  # eigenvalues.
-    return Q, S
-
+from .utility import gaussian_kernel, low_rank_eigen
 
 class DeformableRegistration(EMRegistration):
     """
