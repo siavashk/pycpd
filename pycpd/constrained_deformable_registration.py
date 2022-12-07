@@ -1,11 +1,10 @@
 from builtins import super
 import numpy as np
 import numbers
-from .emregistration import EMRegistration
-from .utility import gaussian_kernel, low_rank_eigen
+from .deformable_registration import DeformableRegistration
 
 
-class ConstrainedDeformableRegistration(EMRegistration):
+class ConstrainedDeformableRegistration(DeformableRegistration):
     """
     Constrained deformable registration.
 
@@ -28,16 +27,8 @@ class ConstrainedDeformableRegistration(EMRegistration):
 
     """
 
-    def __init__(self, alpha=None, beta=None, e_alpha = None, source_id = None, target_id= None, low_rank=False, num_eig=100, *args, **kwargs):
+    def __init__(self, e_alpha = None, source_id = None, target_id= None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if alpha is not None and (not isinstance(alpha, numbers.Number) or alpha <= 0):
-            raise ValueError(
-                "Expected a positive value for regularization parameter alpha. Instead got: {}".format(alpha))
-
-        if beta is not None and (not isinstance(beta, numbers.Number) or beta <= 0):
-            raise ValueError(
-                "Expected a positive value for the width of the coherent Gaussian kerenl. Instead got: {}".format(beta))
-        
         if e_alpha is not None and (not isinstance(e_alpha, numbers.Number) or e_alpha <= 0):
             raise ValueError(
                 "Expected a positive value for regularization parameter e_alpha. Instead got: {}".format(e_alpha))
@@ -50,8 +41,6 @@ class ConstrainedDeformableRegistration(EMRegistration):
             raise ValueError(
                 "The target ids (target_id) must be a 1D numpy array of ints.")
 
-        self.alpha = 2 if alpha is None else alpha
-        self.beta = 2 if beta is None else beta
         self.e_alpha = 1e-8 if e_alpha is None else e_alpha
         self.source_id = source_id
         self.target_id = target_id
@@ -59,15 +48,6 @@ class ConstrainedDeformableRegistration(EMRegistration):
         self.P_tilde[self.source_id, self.target_id] = 1
         self.P1_tilde = np.sum(self.P_tilde, axis=1)
         self.PX_tilde = np.dot(self.P_tilde, self.X)
-        self.W = np.zeros((self.M, self.D))
-        self.G = gaussian_kernel(self.Y, self.beta)
-        self.low_rank = low_rank
-        self.num_eig = num_eig
-        if self.low_rank is True:
-            self.Q, self.S = low_rank_eigen(self.G, self.num_eig)
-            self.inv_S = np.diag(1./self.S)
-            self.S = np.diag(self.S)
-            self.E = 0.
 
     def update_transform(self):
         """
@@ -94,55 +74,3 @@ class ConstrainedDeformableRegistration(EMRegistration):
                                 (np.matmul(self.Q.T, F))))))
             QtW = np.matmul(self.Q.T, self.W)
             self.E = self.E + self.alpha / 2 * np.trace(np.matmul(QtW.T, np.matmul(self.S, QtW)))
-
-    def transform_point_cloud(self, Y=None):
-        """
-        Update a point cloud using the new estimate of the deformable transformation.
-
-        """
-        if Y is not None:
-            G = gaussian_kernel(X=Y, beta=self.beta, Y=self.Y)
-            return Y + np.dot(G, self.W)
-        else:
-            if self.low_rank is False:
-                self.TY = self.Y + np.dot(self.G, self.W)
-
-            elif self.low_rank is True:
-                self.TY = self.Y + np.matmul(self.Q, np.matmul(self.S, np.matmul(self.Q.T, self.W)))
-                return
-
-
-    def update_variance(self):
-        """
-        Update the variance of the mixture model using the new estimate of the deformable transformation.
-        See the update rule for sigma2 in Eq. 23 of of https://arxiv.org/pdf/0905.2635.pdf.
-
-        """
-        qprev = self.sigma2
-
-        # The original CPD paper does not explicitly calculate the objective functional.
-        # This functional will include terms from both the negative log-likelihood and
-        # the Gaussian kernel used for regularization.
-        self.q = np.inf
-
-        xPx = np.dot(np.transpose(self.Pt1), np.sum(
-            np.multiply(self.X, self.X), axis=1))
-        yPy = np.dot(np.transpose(self.P1),  np.sum(
-            np.multiply(self.TY, self.TY), axis=1))
-        trPXY = np.sum(np.multiply(self.TY, self.PX))
-
-        self.sigma2 = (xPx - 2 * trPXY + yPy) / (self.Np * self.D)
-
-        if self.sigma2 <= 0:
-            self.sigma2 = self.tolerance / 10
-
-        # Here we use the difference between the current and previous
-        # estimate of the variance as a proxy to test for convergence.
-        self.diff = np.abs(self.sigma2 - qprev)
-
-    def get_registration_parameters(self):
-        """
-        Return the current estimate of the deformable transformation parameters.
-
-        """
-        return self.G, self.W
