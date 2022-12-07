@@ -4,7 +4,6 @@ import numbers
 from .emregistration import EMRegistration
 from .utility import gaussian_kernel, low_rank_eigen
 
-
 class DeformableRegistration(EMRegistration):
     """
     Deformable registration.
@@ -16,7 +15,12 @@ class DeformableRegistration(EMRegistration):
 
     beta: float(positive)
         Width of the Gaussian kernel.
-
+    
+    low_rank: bool
+        Whether to use low rank approximation.
+    
+    num_eig: int
+        Number of eigenvectors to use in lowrank calculation.
     """
 
     def __init__(self, alpha=None, beta=None, low_rank=False, num_eig=100, *args, **kwargs):
@@ -70,6 +74,19 @@ class DeformableRegistration(EMRegistration):
         """
         Update a point cloud using the new estimate of the deformable transformation.
 
+        Attributes
+        ----------
+        Y: numpy array, optional
+            Array of points to transform - use to predict on new set of points.
+            Best for predicting on new points not used to run initial registration.
+                If None, self.Y used.
+        
+        Returns
+        -------
+        If Y is None, returns None.
+        Otherwise, returns the transformed Y.
+                
+
         """
         if Y is not None:
             G = gaussian_kernel(X=Y, beta=self.beta, Y=self.Y)
@@ -115,5 +132,13 @@ class DeformableRegistration(EMRegistration):
         """
         Return the current estimate of the deformable transformation parameters.
 
+
+        Returns
+        -------
+        self.G: numpy array
+            Gaussian kernel matrix.
+
+        self.W: numpy array
+            Deformable transformation matrix.
         """
         return self.G, self.W

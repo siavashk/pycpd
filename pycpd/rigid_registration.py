@@ -25,27 +25,28 @@ class RigidRegistration(EMRegistration):
         Utility array used to calculate the rotation matrix.
         Defined in Fig. 2 of https://arxiv.org/pdf/0905.2635.pdf.
 
-    YPY: float
-        Denominator value used to update the scale factor.
-        Defined in Fig. 2 and Eq. 8 of https://arxiv.org/pdf/0905.2635.pdf.
-
-    X_hat: numpy array
-        Centered target point cloud.
-        Defined in Fig. 2 of https://arxiv.org/pdf/0905.2635.pdf.
-
     """
+    # Additional parameters used in this class, but not inputs.
+    # YPY: float
+    #     Denominator value used to update the scale factor.
+    #     Defined in Fig. 2 and Eq. 8 of https://arxiv.org/pdf/0905.2635.pdf.
 
-    def __init__(self, R=None, t=None, s=None, *args, **kwargs):
+    # X_hat: numpy array
+    #     Centered target point cloud.
+    #     Defined in Fig. 2 of https://arxiv.org/pdf/0905.2635.pdf.
+
+
+    def __init__(self, R=None, t=None, s=None, scale=True, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.D != 2 and self.D != 3:
             raise ValueError(
                 'Rigid registration only supports 2D or 3D point clouds. Instead got {}.'.format(self.D))
 
-        if R is not None and (R.ndim != 2 or R.shape[0] is not self.D or R.shape[1] is not self.D or not is_positive_semi_definite(R)):
+        if R is not None and ((R.ndim != 2) or (R.shape[0] != self.D) or (R.shape[1] != self.D) or not is_positive_semi_definite(R)):
             raise ValueError(
                 'The rotation matrix can only be initialized to {}x{} positive semi definite matrices. Instead got: {}.'.format(self.D, self.D, R))
 
-        if t is not None and (t.ndim != 2 or t.shape[0] != 1 or t.shape[1] is not self.D):
+        if t is not None and ((t.ndim != 2) or (t.shape[0] != 1) or (t.shape[1] != self.D)):
             raise ValueError(
                 'The translation vector can only be initialized to 1x{} positive semi definite matrices. Instead got: {}.'.format(self.D, t))
 
@@ -56,6 +57,7 @@ class RigidRegistration(EMRegistration):
         self.R = np.eye(self.D) if R is None else R
         self.t = np.atleast_2d(np.zeros((1, self.D))) if t is None else t
         self.s = 1 if s is None else s
+        self.scale = scale
 
     def update_transform(self):
         """
@@ -87,8 +89,10 @@ class RigidRegistration(EMRegistration):
         # Calculate the rotation matrix using Eq. 9 of https://arxiv.org/pdf/0905.2635.pdf.
         self.R = np.transpose(np.dot(np.dot(U, np.diag(C)), V))
         # Update scale and translation using Fig. 2 of https://arxiv.org/pdf/0905.2635.pdf.
-        self.s = np.trace(np.dot(np.transpose(self.A),
-                                 np.transpose(self.R))) / self.YPY
+        if self.scale is True:
+            self.s = np.trace(np.dot(np.transpose(self.A), np.transpose(self.R))) / self.YPY
+        else:
+            pass
         self.t = np.transpose(muX) - self.s * \
             np.dot(np.transpose(self.R), np.transpose(muY))
 
@@ -96,6 +100,18 @@ class RigidRegistration(EMRegistration):
         """
         Update a point cloud using the new estimate of the rigid transformation.
 
+        Attributes
+        ----------
+        Y: numpy array
+            Point cloud to be transformed - use to predict on new set of points.
+            Best for predicting on new points not used to run initial registration.
+                If None, self.Y used.
+        
+        
+        Returns
+        -------
+        If Y is None, returns None.
+        Otherwise, returns the transformed Y.
         """
         if Y is None:
             self.TY = self.s * np.dot(self.Y, self.R) + self.t
@@ -125,5 +141,15 @@ class RigidRegistration(EMRegistration):
         """
         Return the current estimate of the rigid transformation parameters.
 
+        Returns
+        -------
+        self.s: float
+            Current estimate of the scale factor.
+        
+        self.R: numpy array
+            Current estimate of the rotation matrix.
+        
+        self.t: numpy array
+            Current estimate of the translation vector.
         """
         return self.s, self.R, self.t
