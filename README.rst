@@ -4,12 +4,21 @@ Python-CPD
 
 .. |master_badge| image:: https://github.com/siavashk/pycpd/actions/workflows/build-test.yml/badge.svg?branch=master
 .. |development_badge| image:: https://github.com/siavashk/pycpd/actions/workflows/build-test.yml/badge.svg?branch=development
+.. |joss_paper_badge| image:: https://joss.theoj.org/papers/10.21105/joss.04681/status.svg
+   :target: https://doi.org/10.21105/joss.04681
 
++-----------------+---------------------+
+| Paper Citation  | |joss_paper_badge|  |
++-----------------+---------------------+
+
++-----------------+---------------------+
+|            Build Status               |
 +-----------------+---------------------+
 | master          | |master_badge|      |
 +-----------------+---------------------+
 | development     | |development_badge| |
 +-----------------+---------------------+
+
 
 
 `Documentation <https://siavashk.github.io/pycpd/>`_
