@@ -1,3 +1,4 @@
+*tmp.py
 *.pyc
 /dist/
 /build/
