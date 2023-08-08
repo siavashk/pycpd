@@ -133,21 +133,17 @@ class EMRegistration(object):
     """
 
     def __init__(self, X, Y, sigma2=None, max_iterations=None, tolerance=None, w=None, *args, **kwargs):
-        if type(X) is not np.ndarray or X.ndim != 2:
+        if len(X.shape)!=2:
             raise ValueError(
                 "The target point cloud (X) must be at a 2D numpy array.")
 
-        if type(Y) is not np.ndarray or Y.ndim != 2:
+        if len(Y.shape)!=2:
             raise ValueError(
                 "The source point cloud (Y) must be a 2D numpy array.")
 
         if X.shape[1] != Y.shape[1]:
             raise ValueError(
                 "Both point clouds need to have the same number of dimensions.")
-
-        if sigma2 is not None and (not isinstance(sigma2, numbers.Number) or sigma2 <= 0):
-            raise ValueError(
-                "Expected a positive value for sigma2 instead got: {}".format(sigma2))
 
         if max_iterations is not None and (not isinstance(max_iterations, numbers.Number) or max_iterations < 0):
             raise ValueError(
@@ -251,8 +247,14 @@ class EMRegistration(object):
         Compute the expectation step of the EM algorithm.
         """
         P = np.sum((self.X[None, :, :] - self.TY[:, None, :])**2, axis=2) # (M, N)
-        P = np.exp(-P/(2*self.sigma2))
-        c = (2*np.pi*self.sigma2)**(self.D/2)*self.w/(1. - self.w)*self.M/self.N
+        c = 0
+        
+        if isinstance(self.sigma2, numbers.Number):
+            P = np.exp(-P/(2*self.sigma2))
+            c = (2*np.pi*self.sigma2)**(self.D/2)*self.w/(1. - self.w)*self.M/self.N
+        else:
+            P = np.exp(-P/(2*self.sigma2[:,None]))
+            c = (2*np.pi*np.mean(self.sigma2))**(self.D/2)*self.w/(1. - self.w)*self.M/self.N
 
         den = np.sum(P, axis = 0, keepdims = True) # (1, N)
         den = np.clip(den, np.finfo(self.X.dtype).eps, None) + c
