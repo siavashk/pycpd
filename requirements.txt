@@ -1,1 +1,5 @@
-numpy
+numpy~=2.2.1
+
+scikit-learn~=1.6.1
+matplotlib~=3.10.0
+setuptools~=75.8.0

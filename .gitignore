@@ -12,3 +12,5 @@ testing/__pycache__/*
 
 *.pdf
 .vscode/*
+.idea/*
+venv
